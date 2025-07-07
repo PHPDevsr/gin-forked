@@ -951,7 +951,7 @@ func (c *Context) ClientIP() string {
 
 // RemoteIP parses the IP from Request.RemoteAddr, normalizes and returns the IP (without the port).
 func (c *Context) RemoteIP() string {
-	ip, _, err := net.SplitHostPort(strings.TrimSpace(c.Request.RemoteAddr))
+	ip, _, err := net.SplitHostPort(trimString(c.Request.RemoteAddr))
 	if err != nil {
 		return ""
 	}
