@@ -17,7 +17,7 @@ import (
 )
 
 // BindKey indicates a default bind key.
-const BindKey = "_gin-gonic/gin/bindkey"
+const BindKey = "_PHPDevsr/gin-forked/bindkey"
 
 // localhostIP indicates the default localhost IP address.
 const localhostIP = "127.0.0.1"
