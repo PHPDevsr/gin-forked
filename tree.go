@@ -13,12 +13,6 @@ import (
 	"github.com/gin-gonic/gin/internal/bytesconv"
 )
 
-var (
-	strColon = []byte(":")
-	strStar  = []byte("*")
-	strSlash = []byte("/")
-)
-
 // Param is a single URL parameter, consisting of a key and a value.
 type Param struct {
 	Key   string
