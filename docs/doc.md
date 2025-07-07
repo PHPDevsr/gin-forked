@@ -108,7 +108,7 @@ Gin enables `MsgPack` rendering feature by default. But you can disable this fea
 go build -tags=nomsgpack .
 ```
 
-This is useful to reduce the binary size of executable files. See the [detail information](https://github.com/gin-gonic/gin/pull/1852).
+This is useful to reduce the binary size of executable files. See the [detail information](https://github.com/PHPDevsr/gin-forked/pull/1852).
 
 ## Routing
 
@@ -275,9 +275,9 @@ ids: map[b:hello a:1234]; names: map[second:tianou first:thinkerou]
 
 #### Single file
 
-References issue [#774](https://github.com/gin-gonic/gin/issues/774) and detail [example code](https://github.com/gin-gonic/examples/tree/master/upload-file/single).
+References issue [#774](https://github.com/PHPDevsr/gin-forked/issues/774) and detail [example code](https://github.com/gin-gonic/examples/tree/master/upload-file/single).
 
-`file.Filename` **SHOULD NOT** be trusted. See [`Content-Disposition` on MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition#Directives) and [#1693](https://github.com/gin-gonic/gin/issues/1693)
+`file.Filename` **SHOULD NOT** be trusted. See [`Content-Disposition` on MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition#Directives) and [#1693](https://github.com/PHPDevsr/gin-forked/issues/1693)
 
 > The filename is always optional and must not be used blindly by the application: path information should be stripped, and conversion to the server file system rules should be done.
 
@@ -939,8 +939,8 @@ import (
   "net/http"
   "time"
 
-  "github.com/gin-gonic/gin"
-  "github.com/gin-gonic/gin/binding"
+  "github.com/PHPDevsr/gin-forked"
+  "github.com/PHPDevsr/gin-forked/binding"
   "github.com/go-playground/validator/v10"
 )
 
@@ -998,7 +998,7 @@ See the [struct-lvl-validation example](https://github.com/gin-gonic/examples/tr
 
 ### Only Bind Query String
 
-`ShouldBindQuery` function only binds the query params and not the post data. See the [detail information](https://github.com/gin-gonic/gin/issues/742#issuecomment-315953017).
+`ShouldBindQuery` function only binds the query params and not the post data. See the [detail information](https://github.com/PHPDevsr/gin-forked/issues/742#issuecomment-315953017).
 
 ```go
 package main
@@ -1007,7 +1007,7 @@ import (
   "log"
   "net/http"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 type Person struct {
@@ -1035,7 +1035,7 @@ func startPage(c *gin.Context) {
 
 ### Bind Query String or Post Data
 
-See the [detail information](https://github.com/gin-gonic/gin/issues/742#issuecomment-264681292).
+See the [detail information](https://github.com/PHPDevsr/gin-forked/issues/742#issuecomment-264681292).
 
 ```go
 package main
@@ -1045,7 +1045,7 @@ import (
   "net/http"
   "time"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 type Person struct {
@@ -1068,7 +1068,7 @@ func startPage(c *gin.Context) {
   var person Person
   // If `GET`, only `Form` binding engine (`query`) used.
   // If `POST`, first checks the `content-type` for `JSON` or `XML`, then uses `Form` (`form-data`).
-  // See more at https://github.com/gin-gonic/gin/blob/master/binding/binding.go#L88
+  // See more at https://github.com/PHPDevsr/gin-forked/blob/master/binding/binding.go#L88
   if c.ShouldBind(&person) == nil {
     log.Println(person.Name)
     log.Println(person.Address)
@@ -1099,7 +1099,7 @@ package main
 import (
   "net/http"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 type Person struct {
@@ -1151,7 +1151,7 @@ package main
 import (
   "log"
   "time"
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 type Person struct {
@@ -1171,7 +1171,7 @@ func startPage(c *gin.Context) {
   var person Person
   // If `GET`, only `Form` binding engine (`query`) used.
   // If `POST`, first checks the `content-type` for `JSON` or `XML`, then uses `Form` (`form-data`).
-  // See more at https://github.com/gin-gonic/gin/blob/master/binding/binding.go#L48
+  // See more at https://github.com/PHPDevsr/gin-forked/blob/master/binding/binding.go#L48
         if c.ShouldBind(&person) == nil {
                 log.Println(person.Name)
                 log.Println(person.Addresses)
@@ -1191,7 +1191,7 @@ curl -X GET "localhost:8085/testing?name=appleboy&addresses=foo,bar&birthday=199
 
 ### Bind Uri
 
-See the [detail information](https://github.com/gin-gonic/gin/issues/846).
+See the [detail information](https://github.com/PHPDevsr/gin-forked/issues/846).
 
 ```go
 package main
@@ -1199,7 +1199,7 @@ package main
 import (
   "net/http"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 type Person struct {
@@ -1239,7 +1239,7 @@ import (
   "encoding"
   "strings"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 type Birthday string
@@ -1347,7 +1347,7 @@ import (
   "fmt"
   "net/http"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 type testHeader struct {
@@ -1379,7 +1379,7 @@ func main() {
 
 ### Bind HTML checkboxes
 
-See the [detail information](https://github.com/gin-gonic/gin/issues/129#issuecomment-124260092)
+See the [detail information](https://github.com/PHPDevsr/gin-forked/issues/129#issuecomment-124260092)
 
 main.go
 
@@ -1991,7 +1991,7 @@ import (
   "net/http"
   "time"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 func formatAsDate(t time.Time) string {
@@ -2039,18 +2039,54 @@ Gin allows only one html.Template by default. Check [a multitemplate render](htt
 You can build a server into a single binary containing templates by using the [embed](https://pkg.go.dev/embed) package.
 
 ```go
-package main
+r.GET("/test", func(c *gin.Context) {
+  c.Redirect(http.StatusMovedPermanently, "http://www.google.com/")
+})
+```
 
-import (
-  "embed"
-  "html/template"
-  "net/http"
+Issuing a HTTP redirect from POST. Refer to issue: [#444](https://github.com/PHPDevsr/gin-forked/issues/444)
 
-  "github.com/gin-gonic/gin"
-)
+```go
+r.POST("/test", func(c *gin.Context) {
+  c.Redirect(http.StatusFound, "/foo")
+})
+```
 
-//go:embed assets/* templates/*
-var f embed.FS
+Issuing a Router redirect, use `HandleContext` like below.
+
+``` go
+r.GET("/test", func(c *gin.Context) {
+    c.Request.URL.Path = "/test2"
+    r.HandleContext(c)
+})
+r.GET("/test2", func(c *gin.Context) {
+    c.JSON(http.StatusOK, gin.H{"hello": "world"})
+})
+```
+
+### Custom Middleware
+
+```go
+func Logger() gin.HandlerFunc {
+  return func(c *gin.Context) {
+    t := time.Now()
+
+    // Set example variable
+    c.Set("example", "12345")
+
+    // before request
+
+    c.Next()
+
+    // after request
+    latency := time.Since(t)
+    log.Print(latency)
+
+    // access the status we are sending
+    status := c.Writer.Status()
+    log.Println(status)
+  }
+}
 
 func main() {
   router := gin.Default()
@@ -2190,7 +2226,7 @@ import (
   "net/http"
 
   "github.com/gin-gonic/autotls"
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 func main() {
@@ -2215,7 +2251,7 @@ import (
   "net/http"
 
   "github.com/gin-gonic/autotls"
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
   "golang.org/x/crypto/acme/autocert"
 )
 
@@ -2239,7 +2275,7 @@ func main() {
 
 ### Run multiple service using Gin
 
-See the [question](https://github.com/gin-gonic/gin/issues/346) and try the following example:
+See the [question](https://github.com/PHPDevsr/gin-forked/issues/346) and try the following example:
 
 ```go
 package main
@@ -2249,7 +2285,7 @@ import (
   "net/http"
   "time"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
   "golang.org/x/sync/errgroup"
 )
 
@@ -2332,7 +2368,7 @@ There are a few approaches you can use to perform a graceful shutdown or restart
 
 #### Third-party packages
 
-We can use [fvbock/endless](https://github.com/fvbock/endless) to replace the default `ListenAndServe`. Refer to issue [#296](https://github.com/gin-gonic/gin/issues/296) for more details.
+We can use [fvbock/endless](https://github.com/fvbock/endless) to replace the default `ListenAndServe`. Refer to issue [#296](https://github.com/PHPDevsr/gin-forked/issues/296) for more details.
 
 ```go
 router := gin.Default()
@@ -2365,7 +2401,7 @@ import (
   "syscall"
   "time"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 func main() {
@@ -2411,6 +2447,251 @@ func main() {
 }
 ```
 
+### Build a single binary with templates
+
+You can build a server into a single binary containing templates by using the [embed](https://pkg.go.dev/embed) package.
+
+```go
+package main
+
+import (
+  "embed"
+  "html/template"
+  "net/http"
+
+  "github.com/PHPDevsr/gin-forked"
+)
+
+//go:embed assets/* templates/*
+var f embed.FS
+
+func main() {
+  router := gin.Default()
+  templ := template.Must(template.New("").ParseFS(f, "templates/*.tmpl", "templates/foo/*.tmpl"))
+  router.SetHTMLTemplate(templ)
+
+  // example: /public/assets/images/example.png
+  router.StaticFS("/public", http.FS(f))
+
+  router.GET("/", func(c *gin.Context) {
+    c.HTML(http.StatusOK, "index.tmpl", gin.H{
+      "title": "Main website",
+    })
+  })
+
+  router.GET("/foo", func(c *gin.Context) {
+    c.HTML(http.StatusOK, "bar.tmpl", gin.H{
+      "title": "Foo website",
+    })
+  })
+
+  router.GET("favicon.ico", func(c *gin.Context) {
+    file, _ := f.ReadFile("assets/favicon.ico")
+    c.Data(
+      http.StatusOK,
+      "image/x-icon",
+      file,
+    )
+  })
+
+  router.Run(":8080")
+}
+```
+
+See a complete example in the `https://github.com/gin-gonic/examples/tree/master/assets-in-binary/example02` directory.
+
+### Bind form-data request with custom struct
+
+The follow example using custom struct:
+
+```go
+type StructA struct {
+    FieldA string `form:"field_a"`
+}
+
+type StructB struct {
+    NestedStruct StructA
+    FieldB string `form:"field_b"`
+}
+
+type StructC struct {
+    NestedStructPointer *StructA
+    FieldC string `form:"field_c"`
+}
+
+type StructD struct {
+    NestedAnonyStruct struct {
+        FieldX string `form:"field_x"`
+    }
+    FieldD string `form:"field_d"`
+}
+
+func GetDataB(c *gin.Context) {
+    var b StructB
+    c.Bind(&b)
+    c.JSON(http.StatusOK, gin.H{
+        "a": b.NestedStruct,
+        "b": b.FieldB,
+    })
+}
+
+func GetDataC(c *gin.Context) {
+    var b StructC
+    c.Bind(&b)
+    c.JSON(http.StatusOK, gin.H{
+        "a": b.NestedStructPointer,
+        "c": b.FieldC,
+    })
+}
+
+func GetDataD(c *gin.Context) {
+    var b StructD
+    c.Bind(&b)
+    c.JSON(http.StatusOK, gin.H{
+        "x": b.NestedAnonyStruct,
+        "d": b.FieldD,
+    })
+}
+
+func main() {
+    r := gin.Default()
+    r.GET("/getb", GetDataB)
+    r.GET("/getc", GetDataC)
+    r.GET("/getd", GetDataD)
+
+    r.Run()
+}
+```
+
+Using the command `curl` command result:
+
+```sh
+$ curl "http://localhost:8080/getb?field_a=hello&field_b=world"
+{"a":{"FieldA":"hello"},"b":"world"}
+$ curl "http://localhost:8080/getc?field_a=hello&field_c=world"
+{"a":{"FieldA":"hello"},"c":"world"}
+$ curl "http://localhost:8080/getd?field_x=hello&field_d=world"
+{"d":"world","x":{"FieldX":"hello"}}
+```
+
+### Try to bind body into different structs
+
+The normal methods for binding request body consumes `c.Request.Body` and they
+cannot be called multiple times.
+
+```go
+type formA struct {
+  Foo string `json:"foo" xml:"foo" binding:"required"`
+}
+
+type formB struct {
+  Bar string `json:"bar" xml:"bar" binding:"required"`
+}
+
+func SomeHandler(c *gin.Context) {
+  objA := formA{}
+  objB := formB{}
+  // Calling c.ShouldBind consumes c.Request.Body and it cannot be reused.
+  if errA := c.ShouldBind(&objA); errA == nil {
+    c.String(http.StatusOK, `the body should be formA`)
+  // Always an error is occurred by this because c.Request.Body is EOF now.
+  } else if errB := c.ShouldBind(&objB); errB == nil {
+    c.String(http.StatusOK, `the body should be formB`)
+  } else {
+    ...
+  }
+}
+```
+
+For this, you can use `c.ShouldBindBodyWith` or shortcuts.
+
+- `c.ShouldBindBodyWithJSON` is a shortcut for c.ShouldBindBodyWith(obj, binding.JSON).
+- `c.ShouldBindBodyWithXML` is a shortcut for c.ShouldBindBodyWith(obj, binding.XML).
+- `c.ShouldBindBodyWithYAML` is a shortcut for c.ShouldBindBodyWith(obj, binding.YAML).
+- `c.ShouldBindBodyWithTOML` is a shortcut for c.ShouldBindBodyWith(obj, binding.TOML).
+
+```go
+func SomeHandler(c *gin.Context) {
+  objA := formA{}
+  objB := formB{}
+  // This reads c.Request.Body and stores the result into the context.
+  if errA := c.ShouldBindBodyWith(&objA, binding.Form); errA == nil {
+    c.String(http.StatusOK, `the body should be formA`)
+  // At this time, it reuses body stored in the context.
+  } else if errB := c.ShouldBindBodyWith(&objB, binding.JSON); errB == nil {
+    c.String(http.StatusOK, `the body should be formB JSON`)
+  // And it can accepts other formats
+  } else if errB2 := c.ShouldBindBodyWithXML(&objB); errB2 == nil {
+    c.String(http.StatusOK, `the body should be formB XML`)
+  } else {
+    ...
+  }
+}
+```
+
+1. `c.ShouldBindBodyWith` stores body into the context before binding. This has
+a slight impact to performance, so you should not use this method if you are
+enough to call binding at once.
+2. This feature is only needed for some formats -- `JSON`, `XML`, `MsgPack`,
+`ProtoBuf`. For other formats, `Query`, `Form`, `FormPost`, `FormMultipart`,
+can be called by `c.ShouldBind()` multiple times without any damage to
+performance (See [#1341](https://github.com/PHPDevsr/gin-forked/pull/1341)).
+
+### Bind form-data request with custom struct and custom tag
+
+```go
+const (
+  customerTag = "url"
+  defaultMemory = 32 << 20
+)
+
+type customerBinding struct {}
+
+func (customerBinding) Name() string {
+  return "form"
+}
+
+func (customerBinding) Bind(req *http.Request, obj any) error {
+  if err := req.ParseForm(); err != nil {
+    return err
+  }
+  if err := req.ParseMultipartForm(defaultMemory); err != nil {
+    if err != http.ErrNotMultipart {
+      return err
+    }
+  }
+  if err := binding.MapFormWithTag(obj, req.Form, customerTag); err != nil {
+    return err
+  }
+  return validate(obj)
+}
+
+func validate(obj any) error {
+  if binding.Validator == nil {
+    return nil
+  }
+  return binding.Validator.ValidateStruct(obj)
+}
+
+// Now we can do this!!!
+// FormA is an external type that we can't modify it's tag
+type FormA struct {
+  FieldA string `url:"field_a"`
+}
+
+func ListHandler(s *Service) func(ctx *gin.Context) {
+  return func(ctx *gin.Context) {
+    var urlBinding = customerBinding{}
+    var opt FormA
+    err := ctx.MustBindWith(&opt, urlBinding)
+    if err != nil {
+      ...
+    }
+    ...
+  }
+}
+```
+
 ### http2 server push
 
 http.Pusher is supported only **go1.8+**. See the [golang blog](https://go.dev/blog/h2push) for detail information.
@@ -2423,7 +2704,7 @@ import (
   "log"
   "net/http"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 var html = template.Must(template.New("https").Parse(`
@@ -2460,13 +2741,57 @@ func main() {
 }
 ```
 
+### Define format for the log of routes
+
+The default log of routes is:
+
+```sh
+[GIN-debug] POST   /foo                      --> main.main.func1 (3 handlers)
+[GIN-debug] GET    /bar                      --> main.main.func2 (3 handlers)
+[GIN-debug] GET    /status                   --> main.main.func3 (3 handlers)
+```
+
+If you want to log this information in given format (e.g. JSON, key values or something else), then you can define this format with `gin.DebugPrintRouteFunc`.
+In the example below, we log all routes with standard log package but you can use another log tools that suits of your needs.
+
+```go
+import (
+  "log"
+  "net/http"
+
+  "github.com/PHPDevsr/gin-forked"
+)
+
+func main() {
+  r := gin.Default()
+  gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
+    log.Printf("endpoint %v %v %v %v\n", httpMethod, absolutePath, handlerName, nuHandlers)
+  }
+
+  r.POST("/foo", func(c *gin.Context) {
+    c.JSON(http.StatusOK, "foo")
+  })
+
+  r.GET("/bar", func(c *gin.Context) {
+    c.JSON(http.StatusOK, "bar")
+  })
+
+  r.GET("/status", func(c *gin.Context) {
+    c.JSON(http.StatusOK, "ok")
+  })
+
+  // Listen and Server in http://0.0.0.0:8080
+  r.Run()
+}
+```
+
 ### Set and get a cookie
 
 ```go
 import (
   "fmt"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 func main() {
@@ -2507,7 +2832,7 @@ import (
   "net/http"
   "time"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 func main() {
@@ -2540,7 +2865,66 @@ func main() {
 }
 ```
 
-### Don't trust all proxies
+### Custom json codec at runtime
+
+Gin support custom json serialization and deserialization logic without using compile tags.
+
+1. Define a custom struct implements the `json.Core` interface.
+
+2. Before your engine starts, assign values to `json.API` using the custom struct.
+
+```go
+package main
+
+import (
+  "io"
+
+  "github.com/PHPDevsr/gin-forked"
+  "github.com/PHPDevsr/gin-forked/codec/json"
+  jsoniter "github.com/json-iterator/go"
+)
+
+var customConfig = jsoniter.Config{
+  EscapeHTML:             true,
+  SortMapKeys:            true,
+  ValidateJsonRawMessage: true,
+}.Froze()
+
+// implement api.JsonApi
+type customJsonApi struct {
+}
+
+func (j customJsonApi) Marshal(v any) ([]byte, error) {
+  return customConfig.Marshal(v)
+}
+
+func (j customJsonApi) Unmarshal(data []byte, v any) error {
+  return customConfig.Unmarshal(data, v)
+}
+
+func (j customJsonApi) MarshalIndent(v any, prefix, indent string) ([]byte, error) {
+  return customConfig.MarshalIndent(v, prefix, indent)
+}
+
+func (j customJsonApi) NewEncoder(writer io.Writer) json.Encoder {
+  return customConfig.NewEncoder(writer)
+}
+
+func (j customJsonApi) NewDecoder(reader io.Reader) json.Decoder {
+  return customConfig.NewDecoder(reader)
+}
+
+func main() {
+  //Replace the default json api
+  json.API = customJsonApi{}
+
+  //Start your gin engine
+  router := gin.Default()
+  router.Run(":8080")
+}
+```
+
+## Don't trust all proxies
 
 Gin lets you specify which headers to hold the real client IP (if any),
 as well as specifying which proxies (or direct clients) you trust to
@@ -2561,7 +2945,7 @@ unnecessary computation.
 import (
   "fmt"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 func main() {
@@ -2587,7 +2971,7 @@ Look at the example below:
 import (
   "fmt"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 func main() {
@@ -2623,7 +3007,7 @@ package main
 import (
   "net/http"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 func setupRouter() *gin.Engine {
