@@ -2,33 +2,19 @@
 
 <img align="right" width="159px" src="https://raw.githubusercontent.com/gin-gonic/logo/master/color.png">
 
-[![Build Status](https://github.com/gin-gonic/gin/actions/workflows/gin.yml/badge.svg?branch=master)](https://github.com/gin-gonic/gin/actions/workflows/gin.yml)
-[![Trivy Security Scan](https://github.com/gin-gonic/gin/actions/workflows/trivy-scan.yml/badge.svg)](https://github.com/gin-gonic/gin/actions/workflows/trivy-scan.yml)
-[![codecov](https://codecov.io/gh/gin-gonic/gin/branch/master/graph/badge.svg)](https://codecov.io/gh/gin-gonic/gin)
-[![Go Report Card](https://goreportcard.com/badge/github.com/gin-gonic/gin)](https://goreportcard.com/report/github.com/gin-gonic/gin)
-[![Go Reference](https://pkg.go.dev/badge/github.com/gin-gonic/gin?status.svg)](https://pkg.go.dev/github.com/gin-gonic/gin?tab=doc)
-[![Sourcegraph](https://sourcegraph.com/github.com/gin-gonic/gin/-/badge.svg)](https://sourcegraph.com/github.com/gin-gonic/gin?badge)
-[![Open Source Helpers](https://www.codetriage.com/gin-gonic/gin/badges/users.svg)](https://www.codetriage.com/gin-gonic/gin)
-[![Release](https://img.shields.io/github/release/gin-gonic/gin.svg?style=flat-square)](https://github.com/gin-gonic/gin/releases)
+[![Build Status](https://github.com/PHPDevsr/gin-forked/workflows/Run%20Tests/badge.svg?branch=master)](https://github.com/PHPDevsr/gin-forked/actions?query=branch%3Amaster)
+[![codecov](https://codecov.io/gh/PHPDevsr/gin-forked/branch/master/graph/badge.svg)](https://codecov.io/gh/PHPDevsr/gin-forked)
+[![Go Report Card](https://goreportcard.com/badge/github.com/PHPDevsr/gin-forked)](https://goreportcard.com/report/github.com/PHPDevsr/gin-forked)
+[![Go Reference](https://pkg.go.dev/badge/github.com/PHPDevsr/gin-forked?status.svg)](https://pkg.go.dev/github.com/PHPDevsr/gin-forked?tab=doc)
+[![Sourcegraph](https://sourcegraph.com/github.com/PHPDevsr/gin-forked/-/badge.svg)](https://sourcegraph.com/github.com/PHPDevsr/gin-forked?badge)
+[![Open Source Helpers](https://www.codetriage.com/PHPDevsr/gin-forked/badges/users.svg)](https://www.codetriage.com/PHPDevsr/gin-forked)
+[![Release](https://img.shields.io/github/release/PHPDevsr/gin-forked.svg?style=flat-square)](https://github.com/PHPDevsr/gin-forked/releases)
+[![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.com/PHPDevsr/gin-forked)](https://www.tickgit.com/browse?repo=github.com/PHPDevsr/gin-forked)
 
-## 📰 [Announcing Gin 1.11.0!](https://gin-gonic.com/en/blog/news/gin-1-11-0-release-announcement/)
+Gin is a web framework written in [Go](https://go.dev/). It features a martini-like API with performance that is up to 40 times faster thanks to [httprouter](https://github.com/julienschmidt/httprouter).
+If you need performance and good productivity, you will love Gin.
 
-Read about the latest features and improvements in Gin 1.11.0 on our official blog.
-
----
-
-Gin is a high-performance HTTP web framework written in [Go](https://go.dev/). It provides a Martini-like API but with significantly better performance—up to 40 times faster—thanks to [httprouter](https://github.com/julienschmidt/httprouter). Gin is designed for building REST APIs, web applications, and microservices where speed and developer productivity are essential.
-
-**Why choose Gin?**
-
-Gin combines the simplicity of Express.js-style routing with Go's performance characteristics, making it ideal for:
-
-- Building high-throughput REST APIs
-- Developing microservices that need to handle many concurrent requests
-- Creating web applications that require fast response times
-- Prototyping web services quickly with minimal boilerplate
-
-**Gin's key features:**
+**Gin's key features are:**
 
 - **Zero allocation router** - Extremely memory-efficient routing with no heap allocations
 - **High performance** - Benchmarks show superior speed compared to other Go web frameworks
@@ -51,13 +37,19 @@ Gin combines the simplicity of Express.js-style routing with Go's performance ch
 
 With [Go's module support](https://go.dev/wiki/Modules#how-to-use-modules), simply import Gin in your code and Go will automatically fetch it during build:
 
-```go
-import "github.com/gin-gonic/gin"
+```sh
+import "github.com/PHPDevsr/gin-forked"
 ```
 
-### Your First Gin Application
+Alternatively, use `go get`:
 
-Here's a complete example that demonstrates Gin's simplicity:
+```sh
+go get -u github.com/PHPDevsr/gin-forked
+```
+
+### Running Gin
+
+A basic example:
 
 ```go
 package main
@@ -66,7 +58,7 @@ import (
   "log"
   "net/http"
 
-  "github.com/gin-gonic/gin"
+  "github.com/PHPDevsr/gin-forked"
 )
 
 func main() {
@@ -185,20 +177,13 @@ Gin demonstrates exceptional performance compared to other Go web frameworks. It
 - (3): Heap Memory (B/op), lower is better
 - (4): Average Allocations per Repetition (allocs/op), lower is better
 
-## 🔌 Middleware Ecosystem
+## Middleware
 
-Gin has a rich ecosystem of middleware for common web development needs. Explore community-contributed middleware:
+You can find many useful Gin middlewares at [gin-contrib](https://github.com/gin-contrib) and [gin-gonic/contrib](https://github.com/gin-gonic/contrib).
 
-- **[gin-contrib](https://github.com/gin-contrib)** - Official middleware collection including:
-  - Authentication (JWT, Basic Auth, Sessions)
-  - CORS, Rate limiting, Compression
-  - Logging, Metrics, Tracing
-  - Static file serving, Template engines
-- **[gin-gonic/contrib](https://github.com/gin-gonic/contrib)** - Additional community middleware
+## Uses
 
-## 🏢 Production Usage
-
-Gin powers many high-traffic applications and services in production:
+Here are some awesome projects that are using the [Gin](https://github.com/PHPDevsr/gin-forked) web framework.
 
 - **[gorush](https://github.com/appleboy/gorush)** - High-performance push notification server
 - **[fnproject](https://github.com/fnproject/fn)** - Container-native, serverless platform
