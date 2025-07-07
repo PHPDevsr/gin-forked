@@ -2,12 +2,12 @@
 
 <img align="right" width="159px" src="https://raw.githubusercontent.com/gin-gonic/logo/master/color.png">
 
-[![Build Status](https://github.com/PHPDevsr/gin-forked/workflows/Run%20Tests/badge.svg?branch=master)](https://github.com/PHPDevsr/gin-forked/actions?query=branch%3Amaster)
+[![Build Status](https://github.com/PHPDevsr/gin-forked/actions/workflows/gin.yml/badge.svg?branch=develop)](https://github.com/PHPDevsr/gin-forked/actions/workflows/gin.yml)
 [![codecov](https://codecov.io/gh/PHPDevsr/gin-forked/branch/master/graph/badge.svg)](https://codecov.io/gh/PHPDevsr/gin-forked)
 [![Go Report Card](https://goreportcard.com/badge/github.com/PHPDevsr/gin-forked)](https://goreportcard.com/report/github.com/PHPDevsr/gin-forked)
 [![Go Reference](https://pkg.go.dev/badge/github.com/PHPDevsr/gin-forked?status.svg)](https://pkg.go.dev/github.com/PHPDevsr/gin-forked?tab=doc)
 [![Sourcegraph](https://sourcegraph.com/github.com/PHPDevsr/gin-forked/-/badge.svg)](https://sourcegraph.com/github.com/PHPDevsr/gin-forked?badge)
-[![Open Source Helpers](https://www.codetriage.com/PHPDevsr/gin-forked/badges/users.svg)](https://www.codetriage.com/PHPDevsr/gin-forked)
+[![Open Source Helpers](https://www.codetriage.com/phpdevsr/gin-forked/badges/users.svg)](https://www.codetriage.com/PHPDevsr/gin-forked)
 [![Release](https://img.shields.io/github/release/PHPDevsr/gin-forked.svg?style=flat-square)](https://github.com/PHPDevsr/gin-forked/releases)
 [![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.com/PHPDevsr/gin-forked)](https://www.tickgit.com/browse?repo=github.com/PHPDevsr/gin-forked)
 
