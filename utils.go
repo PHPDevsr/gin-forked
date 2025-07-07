@@ -108,7 +108,7 @@ func parseAccept(acceptHeader string) []string {
 		if i := strings.IndexByte(part, ';'); i > 0 {
 			part = part[:i]
 		}
-		if part = textproto.TrimString(part); part != "" {
+		if part = trimString(part); part != "" {
 			out = append(out, part)
 		}
 	}
@@ -162,4 +162,9 @@ func isASCII(s string) bool {
 		}
 	}
 	return true
+}
+
+// Alias of textproto.TrimString(s)
+func trimString(s string) string {
+	return textproto.TrimString(s)
 }
