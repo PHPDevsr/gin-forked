@@ -78,9 +78,7 @@ func (n *node) addChild(child *node) {
 }
 
 func countParams(path string) uint16 {
-	colons := strings.Count(path, ":")
-	stars := strings.Count(path, "*")
-	return uint16(colons + stars)
+	return uint16(strings.Count(path, ":") + strings.Count(path, "*"))
 }
 
 func countSections(path string) uint16 {
