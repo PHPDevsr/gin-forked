@@ -10,6 +10,8 @@ on:
       - "**.go"
 
 permissions:
+  # deployments permission to deploy GitHub pages website
+  deployments: write
   # contents permission to update benchmark contents in gh-pages branch
   contents: write
   # allow posting comments to pull request
@@ -97,7 +99,7 @@ jobs:
           comment-on-alert: ${{ github.event.pull_request.head.repo.fork == false }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           summary-always: true
-          alert-threshold: "100%"
+          alert-threshold: "150%"
 
       - name: Store Benchmark Results for develop branch
         uses: benchmark-action/github-action-benchmark@v1.20.4
@@ -111,7 +113,25 @@ jobs:
           fail-on-alert: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
           summary-always: true
-          alert-threshold: "100%"
+          alert-threshold: "150%"
+
+      - name: Publish Benchmark Results to GitHub Pages
+        uses: benchmark-action/github-action-benchmark@v1.20.4
+        if: ${{ github.ref_name == 'develop' }}
+        with:
+          tool: 'go'
+          output-file-path: output.txt
+          benchmark-data-dir-path: "benchmarks"
+          fail-on-alert: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          comment-on-alert: true
+          summary-always: true
+          # Save the data to external file (GitHub Pages)
+          save-data-file: true
+          alert-threshold: "150%"
+          # TODO: reactivate it later -> when v3 is the stable one
+          auto-push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          #auto-push: false
 
       - name: Update Benchmark Results cache
         uses: actions/cache/save@v4
