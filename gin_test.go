@@ -627,27 +627,27 @@ func TestListOfRoutes(t *testing.T) {
 	assertRoutePresent(t, list, RouteInfo{
 		Method:  http.MethodGet,
 		Path:    "/favicon.ico",
-		Handler: "^(.*/vendor/)?github.com/gin-gonic/gin.handlerTest1$",
+		Handler: "^(.*/vendor/)?github.com/PHPDevsr/gin-forked.handlerTest1$",
 	})
 	assertRoutePresent(t, list, RouteInfo{
 		Method:  http.MethodGet,
 		Path:    "/",
-		Handler: "^(.*/vendor/)?github.com/gin-gonic/gin.handlerTest1$",
+		Handler: "^(.*/vendor/)?github.com/PHPDevsr/gin-forked.handlerTest1$",
 	})
 	assertRoutePresent(t, list, RouteInfo{
 		Method:  http.MethodGet,
 		Path:    "/users/",
-		Handler: "^(.*/vendor/)?github.com/gin-gonic/gin.handlerTest2$",
+		Handler: "^(.*/vendor/)?github.com/PHPDevsr/gin-forked.handlerTest2$",
 	})
 	assertRoutePresent(t, list, RouteInfo{
 		Method:  http.MethodGet,
 		Path:    "/users/:id",
-		Handler: "^(.*/vendor/)?github.com/gin-gonic/gin.handlerTest1$",
+		Handler: "^(.*/vendor/)?github.com/PHPDevsr/gin-forked.handlerTest1$",
 	})
 	assertRoutePresent(t, list, RouteInfo{
 		Method:  http.MethodPost,
 		Path:    "/users/:id",
-		Handler: "^(.*/vendor/)?github.com/gin-gonic/gin.handlerTest2$",
+		Handler: "^(.*/vendor/)?github.com/PHPDevsr/gin-forked.handlerTest2$",
 	})
 }
 
@@ -931,8 +931,8 @@ func TestNewOptionFunc(t *testing.T) {
 	r := New(fc)
 
 	routes := r.Routes()
-	assertRoutePresent(t, routes, RouteInfo{Path: "/test1", Method: http.MethodGet, Handler: "github.com/gin-gonic/gin.handlerTest1"})
-	assertRoutePresent(t, routes, RouteInfo{Path: "/test2", Method: http.MethodGet, Handler: "github.com/gin-gonic/gin.handlerTest2"})
+	assertRoutePresent(t, routes, RouteInfo{Path: "/test1", Method: http.MethodGet, Handler: "github.com/PHPDevsr/gin-forked.handlerTest1"})
+	assertRoutePresent(t, routes, RouteInfo{Path: "/test2", Method: http.MethodGet, Handler: "github.com/PHPDevsr/gin-forked.handlerTest2"})
 }
 
 func TestWithOptionFunc(t *testing.T) {
@@ -948,8 +948,8 @@ func TestWithOptionFunc(t *testing.T) {
 	})
 
 	routes := r.Routes()
-	assertRoutePresent(t, routes, RouteInfo{Path: "/test1", Method: http.MethodGet, Handler: "github.com/gin-gonic/gin.handlerTest1"})
-	assertRoutePresent(t, routes, RouteInfo{Path: "/test2", Method: http.MethodGet, Handler: "github.com/gin-gonic/gin.handlerTest2"})
+	assertRoutePresent(t, routes, RouteInfo{Path: "/test1", Method: http.MethodGet, Handler: "github.com/PHPDevsr/gin-forked.handlerTest1"})
+	assertRoutePresent(t, routes, RouteInfo{Path: "/test2", Method: http.MethodGet, Handler: "github.com/PHPDevsr/gin-forked.handlerTest2"})
 }
 
 type Birthday string
@@ -975,7 +975,7 @@ func TestCustomUnmarshalStruct(t *testing.T) {
 	assert.Equal(t, `"2000/01/01"`, w.Body.String())
 }
 
-// Test the fix for https://github.com/gin-gonic/gin/issues/4002
+// Test the fix for https://github.com/PHPDevsr/gin-forked/issues/4002
 func TestMethodNotAllowedNoRoute(t *testing.T) {
 	g := New()
 	g.HandleMethodNotAllowed = true
