@@ -5,7 +5,6 @@
 package gin
 
 import (
-	"bytes"
 	"net/url"
 	"strings"
 	"unicode"
@@ -85,16 +84,11 @@ func (n *node) addChild(child *node) {
 }
 
 func countParams(path string) uint16 {
-	var n uint16
-	s := bytesconv.StringToBytes(path)
-	n += uint16(bytes.Count(s, strColon))
-	n += uint16(bytes.Count(s, strStar))
-	return n
+	return uint16(strings.Count(path, ":") + strings.Count(path, "*"))
 }
 
 func countSections(path string) uint16 {
-	s := bytesconv.StringToBytes(path)
-	return uint16(bytes.Count(s, strSlash))
+	return uint16(strings.Count(path, "/"))
 }
 
 type nodeType uint8
