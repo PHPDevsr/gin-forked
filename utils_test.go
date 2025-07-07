@@ -16,6 +16,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var ipAddr = " 192.168.0.1:12345\r\n "
+
 func init() {
 	SetMode(TestMode)
 }
@@ -23,6 +25,12 @@ func init() {
 func BenchmarkParseAccept(b *testing.B) {
 	for b.Loop() {
 		parseAccept("text/html , application/xhtml+xml,application/xml;q=0.9,  */* ;q=0.8")
+	}
+}
+
+func BenchmarkTrimString(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = trimString(ipAddr)
 	}
 }
 
