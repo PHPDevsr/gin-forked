@@ -41,10 +41,10 @@ const (
 )
 
 // BodyBytesKey indicates a default body bytes key.
-const BodyBytesKey = "_gin-gonic/gin/bodybyteskey"
+const BodyBytesKey = "_PHPDevsr/gin-forked/bodybyteskey"
 
 // ContextKey is the key that a Context returns itself for.
-const ContextKey = "_gin-gonic/gin/contextkey"
+const ContextKey = "_PHPDevsr/gin-forked/contextkey"
 
 type ContextKeyType int
 
