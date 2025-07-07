@@ -10,7 +10,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/gin-gonic/gin/internal/bytesconv"
+	"github.com/PHPDevsr/gin-forked/internal/bytesconv"
 )
 
 // Param is a single URL parameter, consisting of a key and a value.

@@ -15,9 +15,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gin-gonic/gin/internal/bytesconv"
-	filesystem "github.com/gin-gonic/gin/internal/fs"
-	"github.com/gin-gonic/gin/render"
+	"github.com/PHPDevsr/gin-forked/internal/bytesconv"
+	filesystem "github.com/PHPDevsr/gin-forked/internal/fs"
+	"github.com/PHPDevsr/gin-forked/render"
 	"github.com/quic-go/quic-go/http3"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
@@ -568,7 +568,7 @@ func (engine *Engine) Run(addr ...string) (err error) {
 
 	if engine.isUnsafeTrustedProxies() {
 		debugPrint("[WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.\n" +
-			"Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
+			"Please check https://github.com/PHPDevsr/gin-forked/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
 	}
 	engine.updateRouteTrees()
 	address := resolveAddress(addr)
@@ -591,7 +591,7 @@ func (engine *Engine) RunTLS(addr, certFile, keyFile string) (err error) {
 
 	if engine.isUnsafeTrustedProxies() {
 		debugPrint("[WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.\n" +
-			"Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
+			"Please check https://github.com/PHPDevsr/gin-forked/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
 	}
 
 	server := &http.Server{ // #nosec G112
@@ -612,7 +612,7 @@ func (engine *Engine) RunUnix(file string) (err error) {
 
 	if engine.isUnsafeTrustedProxies() {
 		debugPrint("[WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.\n" +
-			"Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
+			"Please check https://github.com/PHPDevsr/gin-forked/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
 	}
 
 	listener, err := net.Listen("unix", file)
@@ -638,7 +638,7 @@ func (engine *Engine) RunFd(fd int) (err error) {
 
 	if engine.isUnsafeTrustedProxies() {
 		debugPrint("[WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.\n" +
-			"Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
+			"Please check https://github.com/PHPDevsr/gin-forked/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
 	}
 
 	f := os.NewFile(uintptr(fd), fmt.Sprintf("fd@%d", fd))
@@ -661,7 +661,7 @@ func (engine *Engine) RunQUIC(addr, certFile, keyFile string) (err error) {
 
 	if engine.isUnsafeTrustedProxies() {
 		debugPrint("[WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.\n" +
-			"Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
+			"Please check https://github.com/PHPDevsr/gin-forked/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
 	}
 
 	err = http3.ListenAndServeQUIC(addr, certFile, keyFile, engine.Handler())
@@ -676,7 +676,7 @@ func (engine *Engine) RunListener(listener net.Listener) (err error) {
 
 	if engine.isUnsafeTrustedProxies() {
 		debugPrint("[WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.\n" +
-			"Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
+			"Please check https://github.com/PHPDevsr/gin-forked/blob/master/docs/doc.md#dont-trust-all-proxies for details.")
 	}
 
 	server := &http.Server{ // #nosec G112
