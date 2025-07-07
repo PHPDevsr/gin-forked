@@ -17,7 +17,7 @@ import (
 )
 
 // BindKey indicates a default bind key.
-const BindKey = "_gin-gonic/gin/bindkey"
+const BindKey = "_PHPDevsr/gin-forked/bindkey"
 
 // Bind is a helper function for given interface object and returns a Gin middleware.
 func Bind(val any) HandlerFunc {
