@@ -39,7 +39,7 @@ func cleanPath(p string) string {
 	r := 1
 	w := 1
 
-	if p[0] != '/' {
+	if p[0] != '/' || (n > 1 && (p[1] == '/' || p[1] == '\\')) {
 		r = 0
 
 		if n+1 > stackBufSize {
