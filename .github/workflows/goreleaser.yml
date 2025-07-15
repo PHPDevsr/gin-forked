@@ -29,3 +29,7 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Go module reindex (pkg.go.dev)
+        run: |
+          curl -s https://proxy.golang.org/github.com/${{ github.repository }}/@v/${GITHUB_REF_NAME}.info
