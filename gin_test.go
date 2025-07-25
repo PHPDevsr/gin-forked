@@ -24,6 +24,18 @@ import (
 	"golang.org/x/net/http2"
 )
 
+var (
+	testStr1 = "/api/v1/resource/"
+	testStr2 = "/api/v1/resource"
+)
+
+func BenchmarkAddOrRemoveTrailingSlash(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		addOrRemoveTrailingSlash(testStr1)
+		addOrRemoveTrailingSlash(testStr2)
+	}
+}
+
 func formatAsDate(t time.Time) string {
 	year, month, day := t.Date()
 	return fmt.Sprintf("%d/%02d/%02d", year, month, day)
