@@ -242,10 +242,10 @@ func New(opts ...OptionFunc) *Engine {
 		RemoteIPHeaders:            []string{"X-Forwarded-For", "X-Real-IP"},
 		TrustedPlatform:            defaultPlatform,
 		UseRawPath:                 false,
-		UseEscapedPath:             false,
 		RemoveExtraSlash:           false,
 		UnescapePathValues:         true,
 		MaxMultipartMemory:         defaultMultipartMemory,
+		trees:                      make(methodTrees, 0, 9),
 		delims:                     render.Delims{Left: "{{", Right: "}}"},
 		secureJSONPrefix:           "while(1);",
 		trustedProxies:             []string{"0.0.0.0/0", "::/0"},
@@ -819,7 +819,7 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 
 		if httpMethod != http.MethodConnect && rPath != "/" {
 			// TrailingSlashInsensitivity has precedence over RedirectTrailingSlash.
-			if engine.TrailingSlashInsensitivity && value.tsr {
+			if value.tsr && engine.TrailingSlashInsensitivity {
 				// Retry with the path with or without the trailing slash.
 				// It should succeed because tsr is true.
 				*c.params = (*c.params)[:0] // reset params to avoid overflowing params
@@ -832,8 +832,7 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 					return
 				}
 			}
-
-			if engine.RedirectTrailingSlash && value.tsr {
+			if value.tsr && engine.RedirectTrailingSlash {
 				redirectTrailingSlash(c)
 				return
 			}
@@ -918,37 +917,26 @@ func sanitizePathChars(s string) string {
 func redirectTrailingSlash(c *Context) {
 	req := c.Request
 	p := req.URL.Path
-
-	prefix := c.Request.Header.Get("X-Forwarded-Prefix")
-
-	// Fast Path (no prefix)
-	if prefix == "" {
-		if len(p) > 1 && p[len(p)-1] == '/' {
-			req.URL.Path = p[:len(p)-1]
-		} else {
-			req.URL.Path = p + "/"
-		}
-		redirectRequest(c)
-		return
-	}
-
-	// slow path
-	prefix = path.Clean(prefix)
-	prefix = sanitizePathChars(prefix)
-
-	if strings.Contains(prefix, "//") {
+	if prefix := path.Clean(c.Request.Header.Get("X-Forwarded-Prefix")); prefix != "." {
+		prefix = sanitizePathChars(prefix)
 		prefix = removeRepeatedChar(prefix, '/')
-	}
 
-	p = prefix + "/" + p
-
-	if len(p) > 1 && p[len(p)-1] == '/' {
-		req.URL.Path = p[:len(p)-1]
-	} else {
-		req.URL.Path = p + "/"
+		p = prefix + "/" + req.URL.Path
 	}
+	req.URL.Path = addOrRemoveTrailingSlash(p)
 
 	redirectRequest(c)
+}
+
+// sanitizePathChars removes unsafe characters from path strings,
+// keeping only ASCII letters, ASCII numbers, forward slashes, and hyphens.
+func sanitizePathChars(s string) string {
+	return strings.Map(func(r rune) rune {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '/' || r == '-' {
+			return r
+		}
+		return -1
+	}, s)
 }
 
 func redirectFixedPath(c *Context, root *node, trailingSlash bool) bool {

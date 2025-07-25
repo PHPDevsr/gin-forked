@@ -362,7 +362,7 @@ func BenchmarkRouteTrailingSlashInsensitivity(b *testing.B) {
 		b.ResetTimer()
 		b.ReportAllocs()
 
-		for b.Loop() {
+		for i := 0; i < b.N; i++ {
 			// Cause an insensitive match. Test if the retry logic is causing
 			// slowdowns.
 			w := PerformRequest(router, http.MethodGet, "/path/")
@@ -381,7 +381,7 @@ func BenchmarkRouteTrailingSlashInsensitivity(b *testing.B) {
 		b.ResetTimer()
 		b.ReportAllocs()
 
-		for b.Loop() {
+		for i := 0; i < b.N; i++ {
 			w := PerformRequest(router, http.MethodGet, "/path") // Exact match.
 			if w.Code != http.StatusOK || w.Body.String() != "path" {
 				b.Fatalf("Expected status %d, got %d", http.StatusOK, w.Code)
@@ -398,7 +398,7 @@ func BenchmarkRouteTrailingSlashInsensitivity(b *testing.B) {
 		b.ResetTimer()
 		b.ReportAllocs()
 
-		for b.Loop() {
+		for i := 0; i < b.N; i++ {
 			w := PerformRequest(router, http.MethodGet, "/path/") // Redirect.
 			if w.Code != http.StatusMovedPermanently {
 				b.Fatalf("Expected status %d, got %d", http.StatusMovedPermanently, w.Code)
