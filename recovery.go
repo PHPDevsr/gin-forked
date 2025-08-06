@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gin-gonic/gin/internal/bytesconv"
+	"github.com/PHPDevsr/gin-forked/internal/bytesconv"
 )
 
 const (
