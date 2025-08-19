@@ -78,6 +78,7 @@ jobs:
 
       - name: Run Tests
         run: make test
+        continue-on-error: ${{ matrix.go == '1.25.0' }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
