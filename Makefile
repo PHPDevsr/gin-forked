@@ -10,7 +10,7 @@ TESTTAGS ?= ""
 # default covermode
 COVERMODE := count
 
-# kalau TESTTAGS mengandung -race, ubah jadi atomic
+# when TESTTAGS using flags -race, change mode to atomic
 ifneq (,$(findstring -race,$(TESTTAGS)))
     COVERMODE := atomic
 endif
