@@ -7,12 +7,20 @@ GOFILES := $(shell find . -name "*.go")
 TESTFOLDER := $(shell $(GO) list ./... | grep -E 'gin$$|binding$$|render$$' | grep -v examples)
 TESTTAGS ?= ""
 
+# default covermode
+COVERMODE := count
+
+# kalau TESTTAGS mengandung -race, ubah jadi atomic
+ifneq (,$(findstring -race,$(TESTTAGS)))
+    COVERMODE := atomic
+endif
+
 .PHONY: test
 # Run tests to verify code functionality.
 test:
 	echo "mode: count" > coverage.out
 	for d in $(TESTFOLDER); do \
-		$(GO) test $(TESTTAGS) -v -covermode=count -coverprofile="profile.out" $$d > tmp.out; \
+		$(GO) test $(TESTTAGS) -v -covermode=$(COVERMODE) -coverprofile="profile.out" $$d > tmp.out; \
 		cat tmp.out; \
 		if grep -q "^--- FAIL" tmp.out; then \
 			rm tmp.out; \
