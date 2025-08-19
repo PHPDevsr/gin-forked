@@ -7,6 +7,14 @@ GOFILES := $(shell find . -name "*.go")
 TESTFOLDER := $(shell $(GO) list ./... | grep -E 'gin$$|ginS$$|binding$$|render$$' | grep -v examples)
 TESTTAGS ?= ""
 
+# default covermode
+COVERMODE := count
+
+# when TESTTAGS using flags -race, change mode to atomic
+ifneq (,$(findstring -race,$(TESTTAGS)))
+    COVERMODE := atomic
+endif
+
 .PHONY: test
 # Run tests to verify code functionality.
 test:
