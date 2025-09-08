@@ -78,7 +78,7 @@ jobs:
 
       - name: Run Tests
         run: make test
-        continue-on-error: ${{ matrix.go == '1.25.0' && matrix.test-tags == '-tags go_json' }}
+        continue-on-error: ${{ contains(matrix.go, '1.25') && matrix.test-tags == '-tags go_json' }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
