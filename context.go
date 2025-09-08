@@ -10,6 +10,7 @@ import (
 	"io"
 	"io/fs"
 	"log"
+	"maps"
 	"math"
 	"mime/multipart"
 	"net"
@@ -129,12 +130,8 @@ func (c *Context) Copy() *Context {
 	cp.handlers = nil
 	cp.fullPath = c.fullPath
 
-	cKeys := c.Keys
-	cp.Keys = make(map[any]any, len(cKeys))
 	c.mu.RLock()
-	for k, v := range cKeys {
-		cp.Keys[k] = v
-	}
+	cp.Keys = maps.Clone(c.Keys)
 	c.mu.RUnlock()
 
 	cParams := c.Params
