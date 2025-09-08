@@ -83,7 +83,7 @@ jobs:
 
       # This will only run if we have Benchmark Results from develop branch
       - name: Compare PR Benchmark Results with develop branch
-        uses: benchmark-action/github-action-benchmark@v1.20.4
+        uses: benchmark-action/github-action-benchmark@v1.20.7
         if: steps.cache.outputs.cache-hit == 'true'
         with:
           tool: 'go'
@@ -99,7 +99,7 @@ jobs:
           alert-threshold: "150%"
 
       - name: Store Benchmark Results for develop branch
-        uses: benchmark-action/github-action-benchmark@v1.20.4
+        uses: benchmark-action/github-action-benchmark@v1.20.7
         if: ${{ github.ref_name == 'develop' }}
         with:
           tool: 'go'
@@ -113,7 +113,7 @@ jobs:
           alert-threshold: "150%"
 
       - name: Publish Benchmark Results to GitHub Pages
-        uses: benchmark-action/github-action-benchmark@v1.20.4
+        uses: benchmark-action/github-action-benchmark@v1.20.7
         if: ${{ github.ref_name == 'develop' }}
         with:
           tool: 'go'
