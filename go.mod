@@ -1,6 +1,6 @@
 module github.com/PHPDevsr/gin-forked
 
-go 1.24.0
+go 1.25.1
 
 require (
 	github.com/bytedance/sonic v1.14.2
