@@ -22,18 +22,18 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
       - name: Setup golangci-lint
         uses: golangci/golangci-lint-action@v8
         with:
-          version: v2.3.0
+          version: v2.4.0
           args: --verbose
   test:
     needs: lint
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        go: ["1.24.4", "1.24.5", "1.24.6", "1.25.0"]
+        go: ["1.24.5", "1.24.6", "1.24.7", "1.25.0", "1.25.1"]
         test-tags:
           [
             "",
