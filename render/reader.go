@@ -29,7 +29,7 @@ func (r Reader) Render(w http.ResponseWriter) (err error) {
 	}
 	r.writeHeaders(w)
 	_, err = io.Copy(w, r.Reader)
-	return
+	return err
 }
 
 // WriteContentType (Reader) writes custom ContentType.
