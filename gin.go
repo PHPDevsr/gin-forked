@@ -23,10 +23,12 @@ import (
 	"golang.org/x/net/http2/h2c"
 )
 
-const defaultMultipartMemory = 32 << 20 // 32 MB
-const escapedColon = "\\:"
-const colon = ":"
-const backslash = "\\"
+const (
+	defaultMultipartMemory = 32 << 20 // 32 MB
+	escapedColon           = "\\:"
+	colon                  = ":"
+	backslash              = "\\"
+)
 
 var (
 	default404Body = []byte("404 page not found")
@@ -46,8 +48,10 @@ var defaultTrustedCIDRs = []*net.IPNet{
 	},
 }
 
-var regSafePrefix = regexp.MustCompile("[^a-zA-Z0-9/-]+")
-var regRemoveRepeatedChar = regexp.MustCompile("/{2,}")
+var (
+	regSafePrefix         = regexp.MustCompile("[^a-zA-Z0-9/-]+")
+	regRemoveRepeatedChar = regexp.MustCompile("/{2,}")
+)
 
 // HandlerFunc defines the handler used by gin middleware as return value.
 type HandlerFunc func(*Context)
@@ -549,7 +553,7 @@ func (engine *Engine) Run(addr ...string) (err error) {
 	address := resolveAddress(addr)
 	debugPrint("Listening and serving HTTP on %s\n", address)
 	err = http.ListenAndServe(address, engine.Handler())
-	return
+	return err
 }
 
 // RunTLS attaches the router to a http.Server and starts listening and serving HTTPS (secure) requests.
@@ -565,7 +569,7 @@ func (engine *Engine) RunTLS(addr, certFile, keyFile string) (err error) {
 	}
 
 	err = http.ListenAndServeTLS(addr, certFile, keyFile, engine.Handler())
-	return
+	return err
 }
 
 // RunUnix attaches the router to a http.Server and starts listening and serving HTTP requests
@@ -582,13 +586,13 @@ func (engine *Engine) RunUnix(file string) (err error) {
 
 	listener, err := net.Listen("unix", file)
 	if err != nil {
-		return
+		return err
 	}
 	defer listener.Close()
 	defer os.Remove(file)
 
 	err = http.Serve(listener, engine.Handler())
-	return
+	return err
 }
 
 // RunFd attaches the router to a http.Server and starts listening and serving HTTP requests
@@ -607,11 +611,11 @@ func (engine *Engine) RunFd(fd int) (err error) {
 	defer f.Close()
 	listener, err := net.FileListener(f)
 	if err != nil {
-		return
+		return err
 	}
 	defer listener.Close()
 	err = engine.RunListener(listener)
-	return
+	return err
 }
 
 // RunQUIC attaches the router to a http.Server and starts listening and serving QUIC requests.
@@ -627,7 +631,7 @@ func (engine *Engine) RunQUIC(addr, certFile, keyFile string) (err error) {
 	}
 
 	err = http3.ListenAndServeQUIC(addr, certFile, keyFile, engine.Handler())
-	return
+	return err
 }
 
 // RunListener attaches the router to a http.Server and starts listening and serving HTTP requests
@@ -642,7 +646,7 @@ func (engine *Engine) RunListener(listener net.Listener) (err error) {
 	}
 
 	err = http.Serve(listener, engine.Handler())
-	return
+	return err
 }
 
 // ServeHTTP conforms to the http.Handler interface.

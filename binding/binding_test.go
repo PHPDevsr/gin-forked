@@ -1414,5 +1414,5 @@ func testProtoBodyBindingFail(t *testing.T, b Binding, name, path, badPath, body
 
 func requestWithBody(method, path, body string) (req *http.Request) {
 	req, _ = http.NewRequest(method, path, bytes.NewBufferString(body))
-	return
+	return req
 }
