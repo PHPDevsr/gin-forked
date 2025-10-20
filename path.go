@@ -79,7 +79,6 @@ func cleanPath(p string) string {
 		case '.':
 			if r+1 == n {
 				trailing = true
-				r++
 				// Reduce one comparison between r and n
 				goto endOfLoop
 			}
