@@ -121,7 +121,7 @@ func genLongPaths() (testPaths []cleanPathTest) {
 			result: correctPath,
 		})
 	}
-	return
+	return testPaths
 }
 
 func TestPathCleanLong(t *testing.T) {

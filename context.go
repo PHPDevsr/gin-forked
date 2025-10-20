@@ -298,7 +298,7 @@ func (c *Context) Get(key any) (value any, exists bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	value, exists = c.Keys[key]
-	return
+	return value, exists
 }
 
 // MustGet returns the value for the given key if it exists, otherwise it panics.
@@ -313,7 +313,7 @@ func getTyped[T any](c *Context, key any) (res T) {
 	if val, ok := c.Get(key); ok && val != nil {
 		res, _ = val.(T)
 	}
-	return
+	return res
 }
 
 // GetString returns the value associated with the key as a string.
@@ -533,7 +533,7 @@ func (c *Context) AddParam(key, value string) {
 //		   c.Query("wtf") == ""
 func (c *Context) Query(key string) (value string) {
 	value, _ = c.GetQuery(key)
-	return
+	return value
 }
 
 // DefaultQuery returns the keyed url query value if it exists,
@@ -571,7 +571,7 @@ func (c *Context) GetQuery(key string) (string, bool) {
 // The length of the slice depends on the number of params with the given key.
 func (c *Context) QueryArray(key string) (values []string) {
 	values, _ = c.GetQueryArray(key)
-	return
+	return values
 }
 
 func (c *Context) initQueryCache() {
@@ -589,13 +589,13 @@ func (c *Context) initQueryCache() {
 func (c *Context) GetQueryArray(key string) (values []string, ok bool) {
 	c.initQueryCache()
 	values, ok = c.queryCache[key]
-	return
+	return values, ok
 }
 
 // QueryMap returns a map for a given query key.
 func (c *Context) QueryMap(key string) (dicts map[string]string) {
 	dicts, _ = c.GetQueryMap(key)
-	return
+	return dicts
 }
 
 // GetQueryMap returns a map for a given query key, plus a boolean value
@@ -609,7 +609,7 @@ func (c *Context) GetQueryMap(key string) (map[string]string, bool) {
 // when it exists, otherwise it returns an empty string `("")`.
 func (c *Context) PostForm(key string) (value string) {
 	value, _ = c.GetPostForm(key)
-	return
+	return value
 }
 
 // DefaultPostForm returns the specified key from a POST urlencoded form or multipart form
@@ -641,7 +641,7 @@ func (c *Context) GetPostForm(key string) (string, bool) {
 // The length of the slice depends on the number of params with the given key.
 func (c *Context) PostFormArray(key string) (values []string) {
 	values, _ = c.GetPostFormArray(key)
-	return
+	return values
 }
 
 func (c *Context) initFormCache() {
@@ -662,13 +662,13 @@ func (c *Context) initFormCache() {
 func (c *Context) GetPostFormArray(key string) (values []string, ok bool) {
 	c.initFormCache()
 	values, ok = c.formCache[key]
-	return
+	return values, ok
 }
 
 // PostFormMap returns a map for a given form key.
 func (c *Context) PostFormMap(key string) (dicts map[string]string) {
 	dicts, _ = c.GetPostFormMap(key)
-	return
+	return dicts
 }
 
 // GetPostFormMap returns a map for a given form key, plus a boolean value
@@ -1500,7 +1500,7 @@ func (c *Context) hasRequestContext() bool {
 // Deadline returns that there is no deadline (ok==false) when c.Request has no Context.
 func (c *Context) Deadline() (deadline time.Time, ok bool) {
 	if !c.hasRequestContext() {
-		return
+		return deadline, ok
 	}
 	return c.Request.Context().Deadline()
 }

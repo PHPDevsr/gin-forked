@@ -22,7 +22,7 @@ func (r Data) Render(w http.ResponseWriter) (err error) {
 		w.Header().Set("Content-Length", strconv.Itoa(len(r.Data)))
 	}
 	_, err = w.Write(r.Data)
-	return
+	return err
 }
 
 // WriteContentType (Data) writes custom ContentType.
