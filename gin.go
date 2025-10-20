@@ -12,6 +12,7 @@ import (
 	"net/netip"
 	"os"
 	"path"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -48,6 +49,11 @@ var defaultTrustedCIDRs = []netip.Prefix{
 	netip.MustParsePrefix("0.0.0.0/0"), // IPv4
 	netip.MustParsePrefix("::/0"),      // IPv6
 }
+
+var (
+	regSafePrefix         = regexp.MustCompile("[^a-zA-Z0-9/-]+")
+	regRemoveRepeatedChar = regexp.MustCompile("/{2,}")
+)
 
 // HandlerFunc defines the handler used by gin middleware as return value.
 type HandlerFunc func(*Context)
@@ -683,7 +689,7 @@ func (engine *Engine) RunUnix(file string) (err error) {
 
 	listener, err := net.Listen("unix", file)
 	if err != nil {
-		return
+		return err
 	}
 	defer listener.Close()
 	defer os.Remove(file)
@@ -711,11 +717,11 @@ func (engine *Engine) RunFd(fd int) (err error) {
 	defer f.Close()
 	listener, err := net.FileListener(f)
 	if err != nil {
-		return
+		return err
 	}
 	defer listener.Close()
 	err = engine.RunListener(listener)
-	return
+	return err
 }
 
 // RunQUIC attaches the router to a http.Server and starts listening and serving QUIC requests.
@@ -731,7 +737,7 @@ func (engine *Engine) RunQUIC(addr, certFile, keyFile string) (err error) {
 	}
 
 	err = http3.ListenAndServeQUIC(addr, certFile, keyFile, engine.Handler())
-	return
+	return err
 }
 
 // RunListener attaches the router to a http.Server and starts listening and serving HTTP requests
