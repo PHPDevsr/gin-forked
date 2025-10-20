@@ -85,14 +85,14 @@ func (w *responseWriter) Write(data []byte) (n int, err error) {
 	w.WriteHeaderNow()
 	n, err = w.ResponseWriter.Write(data)
 	w.size += n
-	return
+	return n, err
 }
 
 func (w *responseWriter) WriteString(s string) (n int, err error) {
 	w.WriteHeaderNow()
 	n, err = io.WriteString(w.ResponseWriter, s)
 	w.size += n
-	return
+	return n, err
 }
 
 func (w *responseWriter) Status() int {

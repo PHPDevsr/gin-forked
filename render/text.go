@@ -34,8 +34,8 @@ func WriteString(w http.ResponseWriter, format string, data []any) (err error) {
 	writeContentType(w, plainContentType)
 	if len(data) > 0 {
 		_, err = fmt.Fprintf(w, format, data...)
-		return
+		return err
 	}
 	_, err = w.Write(bytesconv.StringToBytes(format))
-	return
+	return err
 }

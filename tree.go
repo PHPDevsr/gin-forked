@@ -39,7 +39,7 @@ func (ps Params) Get(name string) (string, bool) {
 // If no matching Param is found, an empty string is returned.
 func (ps Params) ByName(name string) (va string) {
 	va, _ = ps.Get(name)
-	return
+	return va
 }
 
 type methodTree struct {
