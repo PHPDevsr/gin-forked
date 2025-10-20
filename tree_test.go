@@ -365,7 +365,7 @@ func catchPanic(testFunc func()) (recv any) {
 	}()
 
 	testFunc()
-	return
+	return recv
 }
 
 type testRoute struct {

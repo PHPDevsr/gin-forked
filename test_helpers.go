@@ -19,7 +19,7 @@ func CreateTestContext(w http.ResponseWriter) (c *Context, r *Engine) {
 	c = r.allocateContext(0)
 	c.reset()
 	c.writermem.reset(w)
-	return
+	return c, r
 }
 
 // CreateTestContextOnly returns a fresh Context associated with the provided Engine `r`.
@@ -31,7 +31,7 @@ func CreateTestContextOnly(w http.ResponseWriter, r *Engine) (c *Context) {
 	c = r.allocateContext(r.maxParams)
 	c.reset()
 	c.writermem.reset(w)
-	return
+	return c
 }
 
 // waitForServerReady waits for a server to be ready by making HTTP requests
