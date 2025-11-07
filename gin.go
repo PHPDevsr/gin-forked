@@ -847,9 +847,8 @@ func sanitizePathChars(s string) string {
 
 func redirectFixedPath(c *Context, root *node, trailingSlash bool) bool {
 	req := c.Request
-	rPath := req.URL.Path
 
-	if fixedPath, ok := root.findCaseInsensitivePath(cleanPath(rPath), trailingSlash); ok {
+	if fixedPath, ok := root.findCaseInsensitivePath(cleanPath(req.URL.Path), trailingSlash); ok {
 		req.URL.Path = bytesconv.BytesToString(fixedPath)
 		redirectRequest(c)
 		return true
@@ -859,14 +858,13 @@ func redirectFixedPath(c *Context, root *node, trailingSlash bool) bool {
 
 func redirectRequest(c *Context) {
 	req := c.Request
-	rPath := req.URL.Path
 	rURL := req.URL.String()
 
 	code := http.StatusMovedPermanently // Permanent redirect, request with GET method
 	if req.Method != http.MethodGet {
 		code = http.StatusTemporaryRedirect
 	}
-	debugPrint("redirecting request %d: %s --> %s", code, rPath, rURL)
+	debugPrint("redirecting request %d: %s --> %s", code, req.URL.Path, rURL)
 	http.Redirect(c.Writer, req, rURL, code)
 	c.writermem.WriteHeaderNow()
 }
