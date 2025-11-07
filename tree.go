@@ -669,6 +669,8 @@ walk: // Outer loop for walking the tree
 func (n *node) findCaseInsensitivePath(path string, fixTrailingSlash bool) ([]byte, bool) {
 	const stackBufSize = 128
 
+	// Use a static sized buffer on the stack in the common case.
+	// If the path is too long, allocate a buffer on the heap instead.
 	buf := make([]byte, 0, max(stackBufSize, len(path)+1))
 
 	ciPath := n.findCaseInsensitivePathRec(
