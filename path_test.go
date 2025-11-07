@@ -6,6 +6,7 @@
 package gin
 
 import (
+	"regexp"
 	"runtime"
 	"strings"
 	"testing"
@@ -68,6 +69,44 @@ var cleanTests = []cleanPathTest{
 	{"abc/./../def", "/def"},
 	{"abc//./../def", "/def"},
 	{"abc/../../././../def", "/def"},
+}
+
+var regRemoveRepeatedChar = regexp.MustCompile("/{2,}")
+
+func removeRepeatedSlashRegexp(s string) string {
+	return regRemoveRepeatedChar.ReplaceAllString(s, "/")
+}
+
+func removeRepeatedSlashLoopReplace(s string) string {
+	for strings.Contains(s, "//") {
+		s = strings.ReplaceAll(s, "//", "/")
+	}
+	return s
+}
+
+func removeRepeatedSlashStringBuilder(s string) string {
+	if !strings.Contains(s, "//") {
+		return s
+	}
+
+	var sb strings.Builder
+	sb.Grow(len(s) - 1)
+	prevChar := rune(0)
+
+	for _, r := range s {
+		if r == '/' && prevChar == '/' {
+			continue
+		}
+		sb.WriteRune(r)
+		prevChar = r
+	}
+
+	return sb.String()
+}
+
+// removeRepeatedSlash removes multiple consecutive slashes from a string.
+func removeRepeatedSlash(s string) string {
+	return removeRepeatedChar(s, '/')
 }
 
 func TestPathClean(t *testing.T) {
@@ -143,4 +182,105 @@ func BenchmarkPathCleanLong(b *testing.B) {
 			cleanPath(test.path)
 		}
 	}
+}
+
+func TestRemoveRepeatedChar(t *testing.T) {
+	testCases := []struct {
+		name string
+		str  string
+		char byte
+		want string
+	}{
+		{
+			name: "empty",
+			str:  "",
+			char: 'a',
+			want: "",
+		},
+		{
+			name: "noSlash",
+			str:  "abc",
+			char: ',',
+			want: "abc",
+		},
+		{
+			name: "withSlash",
+			str:  "/a/b/c/",
+			char: '/',
+			want: "/a/b/c/",
+		},
+		{
+			name: "withRepeatedSlashes",
+			str:  "/a//b///c////",
+			char: '/',
+			want: "/a/b/c/",
+		},
+		{
+			name: "threeSlashes",
+			str:  "///",
+			char: '/',
+			want: "/",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			res := removeRepeatedChar(tc.str, tc.char)
+			assert.Equal(t, tc.want, res)
+		})
+	}
+}
+
+func benchmarkRemoveRepeatedSlash(b *testing.B, prefix string) {
+	testCases := []struct {
+		name string
+		fn   func(string) string
+	}{
+		{
+			name: "regexp",
+			fn:   removeRepeatedSlashRegexp,
+		},
+		{
+			name: "loopReplace",
+			fn:   removeRepeatedSlashLoopReplace,
+		},
+		{
+			name: "stringBuilder",
+			fn:   removeRepeatedSlashStringBuilder,
+		},
+		{
+			name: "buff",
+			fn:   removeRepeatedSlash,
+		},
+	}
+
+	for _, tc := range testCases {
+		b.Run(prefix+" "+tc.name, func(b *testing.B) {
+			b.ResetTimer()
+			b.ReportAllocs()
+			for b.Loop() {
+				tc.fn(prefix)
+			}
+		})
+	}
+}
+
+func BenchmarkRemoveRepeatedSlash_MultipleSlashes(b *testing.B) {
+	prefix := "/somePrefix/more//text///more////"
+	benchmarkRemoveRepeatedSlash(b, prefix)
+}
+
+func BenchmarkRemoveRepeatedSlash_TwoSlashes(b *testing.B) {
+	prefix := "/somePrefix/more//"
+	benchmarkRemoveRepeatedSlash(b, prefix)
+}
+
+func BenchmarkRemoveNoRepeatedSlash(b *testing.B) {
+	prefix := "/somePrefix/more/text/"
+	benchmarkRemoveRepeatedSlash(b, prefix)
+}
+
+func BenchmarkRemoveNoSlash(b *testing.B) {
+	prefix := "/somePrefixmoretext"
+	benchmarkRemoveRepeatedSlash(b, prefix)
 }
