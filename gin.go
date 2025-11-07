@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"regexp"
 	"strings"
 	"sync"
 
@@ -47,11 +46,6 @@ var defaultTrustedCIDRs = []*net.IPNet{
 		Mask: net.IPMask{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
 	},
 }
-
-var (
-	regSafePrefix         = regexp.MustCompile("[^a-zA-Z0-9/-]+")
-	regRemoveRepeatedChar = regexp.MustCompile("/{2,}")
-)
 
 // HandlerFunc defines the handler used by gin middleware as return value.
 type HandlerFunc func(*Context)
@@ -813,6 +807,17 @@ func serveError(c *Context, code int, defaultMessage []byte) {
 		return
 	}
 	c.writermem.WriteHeaderNow()
+}
+
+// sanitizePathChars removes unsafe characters from path strings,
+// keeping only ASCII letters, ASCII numbers, forward slashes, and hyphens.
+func sanitizePathChars(s string) string {
+	return strings.Map(func(r rune) rune {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '/' || r == '-' {
+			return r
+		}
+		return -1
+	}, s)
 }
 
 func redirectTrailingSlash(c *Context) {
