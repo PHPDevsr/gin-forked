@@ -38,8 +38,6 @@ func cleanPath(p string) string {
 		return "/" + p
 	}
 
-	const stackBufSize = 128
-
 	// Reasonably sized buffer on stack to avoid allocations in the common case.
 	// If a larger buffer is required, it gets allocated dynamically.
 	buf := make([]byte, 0, stackBufSize)
