@@ -76,7 +76,7 @@ jobs:
 
       - name: Get Benchmark Results from develop branch
         id: cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ./cache
           key: ${{ steps.get-develop-branch-sha.outputs.sha }}-${{ runner.os }}-${{ steps.system-info.outputs.cpu-model }}-benchmark
@@ -131,7 +131,7 @@ jobs:
           #auto-push: false
 
       - name: Update Benchmark Results cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         if: ${{ github.ref_name == 'develop' }}
         with:
           path: ./cache
