@@ -82,7 +82,7 @@ func countParams(path string) uint16 {
 }
 
 func countSections(path string) uint16 {
-	return safeUint16(strings.Count(path, "/"))
+	return uint16(strings.Count(path, "/"))
 }
 
 type nodeType uint8
