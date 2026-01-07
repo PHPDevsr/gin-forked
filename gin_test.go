@@ -30,7 +30,7 @@ var (
 )
 
 func BenchmarkAddOrRemoveTrailingSlash(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		addOrRemoveTrailingSlash(testStr1)
 		addOrRemoveTrailingSlash(testStr2)
 	}
@@ -998,7 +998,7 @@ func TestMethodNotAllowedNoRoute(t *testing.T) {
 	assert.Equal(t, http.StatusNotFound, resp.Code)
 }
 
-// Test the fix for https://github.com/gin-gonic/gin/pull/4415
+// Test the fix for https://github.com/PHPDevsr/gin-forked/pull/4415
 func TestLiteralColonWithRun(t *testing.T) {
 	SetMode(TestMode)
 	router := New()
