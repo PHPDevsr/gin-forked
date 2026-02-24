@@ -22,11 +22,11 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.25"
+          go-version: "1.26"
       - name: Setup golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
-          version: v2.5.0
+          version: v2.10.1
           args: --verbose
   test:
     needs: lint
@@ -78,7 +78,6 @@ jobs:
 
       - name: Run Tests
         run: make test
-        continue-on-error: ${{ contains(matrix.go, '1.25') && matrix.test-tags == '-tags go_json' }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
