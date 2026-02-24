@@ -66,7 +66,9 @@ func debugPrint(format string, values ...any) {
 	if !strings.HasSuffix(format, "\n") {
 		format += "\n"
 	}
-	fmt.Fprintf(DefaultWriter, fmt.Sprintf("[GIN-debug] %s", format), values...)
+
+	//nolint:gosec // debug output only, not user-facing HTML
+	fmt.Fprintf(DefaultWriter, "[GIN-debug] "+format, values...)
 }
 
 func getMinVer(v string) (uint64, error) {
