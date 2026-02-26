@@ -1,6 +1,6 @@
 module github.com/PHPDevsr/gin-forked
 
-go 1.24.5
+go 1.25.0
 
 require (
 	github.com/bytedance/sonic v1.15.0
@@ -15,7 +15,7 @@ require (
 	github.com/quic-go/quic-go v0.59.0
 	github.com/stretchr/testify v1.11.1
 	github.com/ugorji/go/codec v1.3.1
-	golang.org/x/net v0.50.0
+	golang.org/x/net v0.51.0
 	google.golang.org/protobuf v1.36.11
 )
 
