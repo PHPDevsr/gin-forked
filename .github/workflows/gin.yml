@@ -81,6 +81,6 @@ jobs:
         continue-on-error: ${{ (contains(matrix.go, '1.25') || contains(matrix.go, '1.26')) && contains(matrix.os, 'windows') && matrix.test-tags == '-tags go_json' }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           flags: ${{ matrix.os }},go-${{ matrix.go }},${{ matrix.test-tags }}
