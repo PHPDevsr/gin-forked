@@ -17,6 +17,7 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"net/netip"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -3375,9 +3376,9 @@ func TestRemoteIPFail(t *testing.T) {
 	c, _ := CreateTestContext(httptest.NewRecorder())
 	c.Request, _ = http.NewRequest(http.MethodPost, "/", nil)
 	c.Request.RemoteAddr = "[:::]:80"
-	ip := net.ParseIP(c.RemoteIP())
+	ip, err := netip.ParseAddr(c.RemoteIP())
 	trust := c.engine.isTrustedProxy(ip)
-	assert.Nil(t, ip)
+	require.Error(t, err)
 	assert.False(t, trust)
 }
 
