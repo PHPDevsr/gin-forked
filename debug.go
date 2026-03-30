@@ -67,7 +67,7 @@ func debugPrint(format string, values ...any) {
 		format += "\n"
 	}
 
-	//nolint:gosec // debug output only, not user-facing HTML
+	// debug output only, not user-facing HTML
 	fmt.Fprintf(DefaultWriter, "[GIN-debug] "+format, values...)
 }
 
