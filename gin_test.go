@@ -12,6 +12,7 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"net/netip"
 	"reflect"
 	"strconv"
 	"strings"
@@ -881,7 +882,7 @@ func TestPrepareTrustedCIRDsWith(t *testing.T) {
 
 	// valid ipv4 cidr
 	{
-		expectedTrustedCIDRs := []*net.IPNet{parseCIDR("0.0.0.0/0")}
+		expectedTrustedCIDRs := []netip.Prefix{netip.MustParsePrefix("0.0.0.0/0")}
 		err := r.SetTrustedProxies([]string{"0.0.0.0/0"})
 
 		require.NoError(t, err)
@@ -897,7 +898,7 @@ func TestPrepareTrustedCIRDsWith(t *testing.T) {
 
 	// valid ipv4 address
 	{
-		expectedTrustedCIDRs := []*net.IPNet{parseCIDR("192.168.1.33/32")}
+		expectedTrustedCIDRs := []netip.Prefix{netip.MustParsePrefix("192.168.1.33/32")}
 
 		err := r.SetTrustedProxies([]string{"192.168.1.33"})
 
@@ -914,7 +915,7 @@ func TestPrepareTrustedCIRDsWith(t *testing.T) {
 
 	// valid ipv6 address
 	{
-		expectedTrustedCIDRs := []*net.IPNet{parseCIDR("2002:0000:0000:1234:abcd:ffff:c0a8:0101/128")}
+		expectedTrustedCIDRs := []netip.Prefix{netip.MustParsePrefix("2002:0000:0000:1234:abcd:ffff:c0a8:0101/128")}
 		err := r.SetTrustedProxies([]string{"2002:0000:0000:1234:abcd:ffff:c0a8:0101"})
 
 		require.NoError(t, err)
@@ -930,7 +931,7 @@ func TestPrepareTrustedCIRDsWith(t *testing.T) {
 
 	// valid ipv6 cidr
 	{
-		expectedTrustedCIDRs := []*net.IPNet{parseCIDR("::/0")}
+		expectedTrustedCIDRs := []netip.Prefix{netip.MustParsePrefix("::/0")}
 		err := r.SetTrustedProxies([]string{"::/0"})
 
 		require.NoError(t, err)
@@ -946,10 +947,10 @@ func TestPrepareTrustedCIRDsWith(t *testing.T) {
 
 	// valid combination
 	{
-		expectedTrustedCIDRs := []*net.IPNet{
-			parseCIDR("::/0"),
-			parseCIDR("192.168.0.0/16"),
-			parseCIDR("172.16.0.1/32"),
+		expectedTrustedCIDRs := []netip.Prefix{
+			netip.MustParsePrefix("::/0"),
+			netip.MustParsePrefix("192.168.0.0/16"),
+			netip.MustParsePrefix("172.16.0.1/32"),
 		}
 		err := r.SetTrustedProxies([]string{
 			"::/0",
@@ -979,14 +980,6 @@ func TestPrepareTrustedCIRDsWith(t *testing.T) {
 		assert.Nil(t, r.trustedCIDRs)
 		require.NoError(t, err)
 	}
-}
-
-func parseCIDR(cidr string) *net.IPNet {
-	_, parsedCIDR, err := net.ParseCIDR(cidr)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return parsedCIDR
 }
 
 func assertRoutePresent(t *testing.T, gotRoutes RoutesInfo, wantRoute RouteInfo) {
