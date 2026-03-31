@@ -793,18 +793,12 @@ func serveError(c *Context, code int, defaultMessage []byte) {
 // sanitizePathChars removes unsafe characters from path strings,
 // keeping only ASCII letters, ASCII numbers, forward slashes, and hyphens.
 func sanitizePathChars(s string) string {
-	lenStr := len(s)
-	b := make([]byte, 0, lenStr)
-	for i := range lenStr {
-		c := s[i]
-		if (c >= 'a' && c <= 'z') ||
-			(c >= 'A' && c <= 'Z') ||
-			(c >= '0' && c <= '9') ||
-			c == '/' || c == '-' {
-			b = append(b, c)
+	return strings.Map(func(r rune) rune {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '/' || r == '-' {
+			return r
 		}
-	}
-	return bytesconv.BytesToString(b)
+		return -1
+	}, s)
 }
 
 func redirectTrailingSlash(c *Context) {
@@ -812,18 +806,34 @@ func redirectTrailingSlash(c *Context) {
 	p := req.URL.Path
 
 	prefix := c.Request.Header.Get("X-Forwarded-Prefix")
-	if prefix != "" {
-		prefix = path.Clean(prefix)
-		prefix = sanitizePathChars(prefix)
+
+	// Fast Path (no prefix)
+	if prefix == "" {
+		if len(p) > 1 && p[len(p)-1] == '/' {
+			req.URL.Path = p[:len(p)-1]
+		} else {
+			req.URL.Path = p + "/"
+		}
+		redirectRequest(c)
+		return
+	}
+
+	// slow path
+	prefix = path.Clean(prefix)
+	prefix = sanitizePathChars(prefix)
+
+	if strings.Contains(prefix, "//") {
 		prefix = removeRepeatedChar(prefix, '/')
-
-		p = prefix + "/" + req.URL.Path
 	}
 
-	req.URL.Path = p + "/"
-	if length := len(p); length > 1 && p[length-1] == '/' {
-		req.URL.Path = p[:length-1]
+	p = prefix + "/" + p
+
+	if len(p) > 1 && p[len(p)-1] == '/' {
+		req.URL.Path = p[:len(p)-1]
+	} else {
+		req.URL.Path = p + "/"
 	}
+
 	redirectRequest(c)
 }
 
