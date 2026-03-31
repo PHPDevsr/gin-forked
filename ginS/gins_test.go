@@ -12,7 +12,6 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"testing"
 	"time"
 
@@ -53,13 +52,10 @@ func TestRunTLS_Real(t *testing.T) {
 		c.String(200, "secure")
 	})
 
-	certFile := filepath.Join("testdata", "certificate", "cert.pem")
-	keyFile := filepath.Join("testdata", "certificate", "key.pem")
-
 	errCh := make(chan error, 1)
 
 	go func() {
-		errCh <- RunTLS(":8443", certFile, keyFile)
+		errCh <- RunTLS(":8443", "./testdata/certificate/cert.pem", "./testdata/certificate/key.pem")
 	}()
 
 	select {
