@@ -42,22 +42,6 @@ func (ps Params) ByName(name string) (va string) {
 	return va
 }
 
-type methodTree struct {
-	method string
-	root   *node
-}
-
-type methodTrees []methodTree
-
-func (trees methodTrees) get(method string) *node {
-	for _, tree := range trees {
-		if tree.method == method {
-			return tree.root
-		}
-	}
-	return nil
-}
-
 func longestCommonPrefix(a, b string) int {
 	i := 0
 	max_ := min(len(a), len(b))
@@ -667,8 +651,6 @@ walk: // Outer loop for walking the tree
 // It returns the case-corrected path and a bool indicating whether the lookup
 // was successful.
 func (n *node) findCaseInsensitivePath(path string, fixTrailingSlash bool) ([]byte, bool) {
-	const stackBufSize = 128
-
 	// Use a static sized buffer on the stack in the common case.
 	// If the path is too long, allocate a buffer on the heap instead.
 	buf := make([]byte, 0, max(stackBufSize, len(path)+1))

@@ -37,6 +37,13 @@ func BenchmarkAddOrRemoveTrailingSlash(b *testing.B) {
 	}
 }
 
+func BenchmarkSanitizePathChars(b *testing.B) {
+	for b.Loop() {
+		sanitizePathChars(testStr1)
+		sanitizePathChars(testStr2)
+	}
+}
+
 func formatAsDate(t time.Time) string {
 	year, month, day := t.Date()
 	return fmt.Sprintf("%d/%02d/%02d", year, month, day)
@@ -449,20 +456,33 @@ func TestLoadHTMLFSFuncMap(t *testing.T) {
 
 func TestAddRoute(t *testing.T) {
 	router := New()
+
 	router.addRoute(http.MethodGet, "/", HandlersChain{func(_ *Context) {}})
 
-	assert.Len(t, router.trees, 1)
-	assert.NotNil(t, router.trees.get(http.MethodGet))
-	assert.Nil(t, router.trees.get(http.MethodPost))
+	assert.NotNil(t, router.getTree)
+	assert.Nil(t, router.postTree)
+	assert.Nil(t, router.putTree)
+	assert.Nil(t, router.optionsTree)
+	assert.Nil(t, router.headTree)
+	assert.Nil(t, router.patchTree)
 
 	router.addRoute(http.MethodPost, "/", HandlersChain{func(_ *Context) {}})
 
-	assert.Len(t, router.trees, 2)
-	assert.NotNil(t, router.trees.get(http.MethodGet))
-	assert.NotNil(t, router.trees.get(http.MethodPost))
+	assert.NotNil(t, router.getTree)
+	assert.NotNil(t, router.postTree)
+	assert.Nil(t, router.putTree)
+	assert.Nil(t, router.optionsTree)
+	assert.Nil(t, router.headTree)
+	assert.Nil(t, router.patchTree)
 
 	router.addRoute(http.MethodPost, "/post", HandlersChain{func(_ *Context) {}})
-	assert.Len(t, router.trees, 2)
+
+	assert.NotNil(t, router.getTree)
+	assert.NotNil(t, router.postTree)
+	assert.Nil(t, router.putTree)
+	assert.Nil(t, router.optionsTree)
+	assert.Nil(t, router.headTree)
+	assert.Nil(t, router.patchTree)
 }
 
 func TestAddRouteFails(t *testing.T) {

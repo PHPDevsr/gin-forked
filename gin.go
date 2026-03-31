@@ -185,7 +185,15 @@ type Engine struct {
 	noRoute          HandlersChain
 	noMethod         HandlersChain
 	pool             sync.Pool
-	trees            methodTrees
+	getTree          *node
+	postTree         *node
+	putTree          *node
+	deleteTree       *node
+	patchTree        *node
+	headTree         *node
+	optionsTree      *node
+	connectTree      *node
+	traceTree        *node
 	maxParams        uint16
 	maxSections      uint16
 	trustedProxies   []string
@@ -225,7 +233,6 @@ func New(opts ...OptionFunc) *Engine {
 		RemoveExtraSlash:           false,
 		UnescapePathValues:         true,
 		MaxMultipartMemory:         defaultMultipartMemory,
-		trees:                      make(methodTrees, 0, 9),
 		delims:                     render.Delims{Left: "{{", Right: "}}"},
 		secureJSONPrefix:           "while(1);",
 		trustedProxies:             []string{"0.0.0.0/0", "::/0"},
@@ -253,6 +260,54 @@ func (engine *Engine) Handler() http.Handler {
 
 	h2s := &http2.Server{}
 	return h2c.NewHandler(engine, h2s)
+}
+
+func (engine *Engine) getMethodTree(method string) *node {
+	switch method {
+	case http.MethodGet:
+		return engine.getTree
+	case http.MethodPost:
+		return engine.postTree
+	case http.MethodPut:
+		return engine.putTree
+	case http.MethodDelete:
+		return engine.deleteTree
+	case http.MethodPatch:
+		return engine.patchTree
+	case http.MethodHead:
+		return engine.headTree
+	case http.MethodOptions:
+		return engine.optionsTree
+	case http.MethodConnect:
+		return engine.connectTree
+	case http.MethodTrace:
+		return engine.traceTree
+	default:
+		return nil
+	}
+}
+
+func (engine *Engine) setMethodTree(method string, root *node) {
+	switch method {
+	case http.MethodGet:
+		engine.getTree = root
+	case http.MethodPost:
+		engine.postTree = root
+	case http.MethodPut:
+		engine.putTree = root
+	case http.MethodDelete:
+		engine.deleteTree = root
+	case http.MethodPatch:
+		engine.patchTree = root
+	case http.MethodHead:
+		engine.headTree = root
+	case http.MethodOptions:
+		engine.optionsTree = root
+	case http.MethodConnect:
+		engine.connectTree = root
+	case http.MethodTrace:
+		engine.traceTree = root
+	}
 }
 
 func (engine *Engine) allocateContext(maxParams uint16) *Context {
@@ -316,10 +371,6 @@ func (engine *Engine) LoadHTMLFS(fs http.FileSystem, patterns ...string) {
 
 // SetHTMLTemplate associate a template with HTML renderer.
 func (engine *Engine) SetHTMLTemplate(templ *template.Template) {
-	if len(engine.trees) > 0 {
-		debugPrintWARNINGSetHTMLTemplate()
-	}
-
 	engine.HTMLRender = render.HTMLProduction{Template: templ.Funcs(engine.FuncMap)}
 }
 
@@ -374,11 +425,12 @@ func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
 
 	debugPrintRoute(method, path, handlers)
 
-	root := engine.trees.get(method)
+	root := engine.getMethodTree(method)
 	if root == nil {
 		root = new(node)
 		root.fullPath = "/"
-		engine.trees = append(engine.trees, methodTree{method: method, root: root})
+
+		engine.setMethodTree(method, root)
 	}
 	root.addRoute(path, handlers)
 
@@ -394,10 +446,23 @@ func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
 // Routes returns a slice of registered routes, including some useful information, such as:
 // the http method, path, and the handler name.
 func (engine *Engine) Routes() (routes RoutesInfo) {
-	for _, tree := range engine.trees {
-		routes = iterate("", tree.method, routes, tree.root)
+	appendRoutes := func(method string, root *node) {
+		if root != nil {
+			routes = iterate("", method, routes, root)
+		}
 	}
-	return routes
+
+	appendRoutes(http.MethodGet, engine.getTree)
+	appendRoutes(http.MethodPost, engine.postTree)
+	appendRoutes(http.MethodPut, engine.putTree)
+	appendRoutes(http.MethodDelete, engine.deleteTree)
+	appendRoutes(http.MethodPatch, engine.patchTree)
+	appendRoutes(http.MethodHead, engine.headTree)
+	appendRoutes(http.MethodOptions, engine.optionsTree)
+	appendRoutes(http.MethodConnect, engine.connectTree)
+	appendRoutes(http.MethodTrace, engine.traceTree)
+
+	return
 }
 
 func iterate(path, method string, routes RoutesInfo, root *node) RoutesInfo {
@@ -519,9 +584,21 @@ func updateRouteTree(n *node) {
 
 // updateRouteTrees do update to the route trees
 func (engine *Engine) updateRouteTrees() {
-	for _, tree := range engine.trees {
-		updateRouteTree(tree.root)
+	update := func(root *node) {
+		if root != nil {
+			updateRouteTree(root)
+		}
 	}
+
+	update(engine.getTree)
+	update(engine.postTree)
+	update(engine.putTree)
+	update(engine.deleteTree)
+	update(engine.patchTree)
+	update(engine.headTree)
+	update(engine.optionsTree)
+	update(engine.connectTree)
+	update(engine.traceTree)
 }
 
 // Run attaches the router to a http.Server and starts listening and serving HTTP requests.
@@ -695,17 +772,15 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 	}
 
 	// Find root of the tree for the given HTTP method
-	t := engine.trees
-	for i, tl := 0, len(t); i < tl; i++ {
-		if t[i].method != httpMethod {
-			continue
-		}
-		root := t[i].root
-		// Find route in tree
+	root := engine.getMethodTree(httpMethod)
+
+	if root != nil {
 		value := root.getValue(rPath, c.params, c.skippedNodes, unescape)
+
 		if value.params != nil {
 			c.Params = *value.params
 		}
+
 		if value.handlers != nil {
 			c.handlers = value.handlers
 			c.fullPath = value.fullPath
@@ -713,9 +788,10 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 			c.writermem.WriteHeaderNow()
 			return
 		}
+
 		if httpMethod != http.MethodConnect && rPath != "/" {
 			// TrailingSlashInsensitivity has precedence over RedirectTrailingSlash.
-			if value.tsr && engine.TrailingSlashInsensitivity {
+			if engine.TrailingSlashInsensitivity && value.tsr {
 				// Retry with the path with or without the trailing slash.
 				// It should succeed because tsr is true.
 				*c.params = (*c.params)[:0] // reset params to avoid overflowing params
@@ -729,7 +805,7 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 				}
 			}
 
-			if value.tsr && engine.RedirectTrailingSlash {
+			if engine.RedirectTrailingSlash && value.tsr {
 				redirectTrailingSlash(c)
 				return
 			}
@@ -737,21 +813,31 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 				return
 			}
 		}
-		break
 	}
 
-	if engine.HandleMethodNotAllowed && len(t) > 0 {
+	if engine.HandleMethodNotAllowed {
 		// According to RFC 7231 section 6.5.5, MUST generate an Allow header field in response
 		// containing a list of the target resource's currently supported methods.
-		allowed := make([]string, 0, len(t)-1)
-		for _, tree := range engine.trees {
-			if tree.method == httpMethod {
-				continue
+		allowed := make([]string, 0, 9)
+		check := func(method string, tree *node) {
+			if method == httpMethod || tree == nil {
+				return
 			}
-			if value := tree.root.getValue(rPath, nil, c.skippedNodes, unescape); value.handlers != nil {
-				allowed = append(allowed, tree.method)
+			if value := tree.getValue(rPath, nil, c.skippedNodes, unescape); value.handlers != nil {
+				allowed = append(allowed, method)
 			}
 		}
+
+		check(http.MethodGet, engine.getTree)
+		check(http.MethodPost, engine.postTree)
+		check(http.MethodPut, engine.putTree)
+		check(http.MethodDelete, engine.deleteTree)
+		check(http.MethodPatch, engine.patchTree)
+		check(http.MethodHead, engine.headTree)
+		check(http.MethodOptions, engine.optionsTree)
+		check(http.MethodConnect, engine.connectTree)
+		check(http.MethodTrace, engine.traceTree)
+
 		if len(allowed) > 0 {
 			c.handlers = engine.allNoMethod
 			c.writermem.Header().Set("Allow", strings.Join(allowed, ", "))
@@ -804,16 +890,36 @@ func sanitizePathChars(s string) string {
 func redirectTrailingSlash(c *Context) {
 	req := c.Request
 	p := req.URL.Path
-	if prefix := path.Clean(c.Request.Header.Get("X-Forwarded-Prefix")); prefix != "." {
-		prefix = sanitizePathChars(prefix)
-		prefix = removeRepeatedChar(prefix, '/')
 
-		p = prefix + "/" + req.URL.Path
+	prefix := c.Request.Header.Get("X-Forwarded-Prefix")
+
+	// Fast Path (no prefix)
+	if prefix == "" {
+		if len(p) > 1 && p[len(p)-1] == '/' {
+			req.URL.Path = p[:len(p)-1]
+		} else {
+			req.URL.Path = p + "/"
+		}
+		redirectRequest(c)
+		return
 	}
-	req.URL.Path = p + "/"
-	if length := len(p); length > 1 && p[length-1] == '/' {
-		req.URL.Path = p[:length-1]
+
+	// slow path
+	prefix = path.Clean(prefix)
+	prefix = sanitizePathChars(prefix)
+
+	if strings.Contains(prefix, "//") {
+		prefix = removeRepeatedChar(prefix, '/')
 	}
+
+	p = prefix + "/" + p
+
+	if len(p) > 1 && p[len(p)-1] == '/' {
+		req.URL.Path = p[:len(p)-1]
+	} else {
+		req.URL.Path = p + "/"
+	}
+
 	redirectRequest(c)
 }
 
