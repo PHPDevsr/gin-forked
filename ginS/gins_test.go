@@ -7,6 +7,7 @@ package ginS
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 	"html/template"
 	"io"
 	"net"
@@ -21,6 +22,26 @@ import (
 
 func init() {
 	gin.SetMode(gin.TestMode)
+}
+
+func waitForTLS(addr string) error {
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+
+	for range 20 {
+		_, err := client.Get(addr)
+		if err == nil {
+			return nil
+		}
+		time.Sleep(200 * time.Millisecond)
+	}
+
+	return fmt.Errorf("server not ready: %s", addr)
 }
 
 func TestRun_Real(t *testing.T) {
@@ -56,7 +77,11 @@ func TestRunTLS_Real(t *testing.T) {
 		_ = RunTLS(":8443", "cert.pem", "key.pem")
 	}()
 
-	time.Sleep(500 * time.Millisecond)
+	// wait until server ready
+	err := waitForTLS("https://localhost:8443/secure")
+	if err != nil {
+		t.Fatalf("server not ready: %v", err)
+	}
 
 	client := &http.Client{
 		Transport: &http.Transport{
