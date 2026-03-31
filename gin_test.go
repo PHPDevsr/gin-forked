@@ -37,6 +37,13 @@ func BenchmarkAddOrRemoveTrailingSlash(b *testing.B) {
 	}
 }
 
+func BenchmarkSanitizePathChars(b *testing.B) {
+	for b.Loop() {
+		sanitizePathChars(testStr1)
+		sanitizePathChars(testStr2)
+	}
+}
+
 func formatAsDate(t time.Time) string {
 	year, month, day := t.Date()
 	return fmt.Sprintf("%d/%02d/%02d", year, month, day)
