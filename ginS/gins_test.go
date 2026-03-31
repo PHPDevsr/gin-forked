@@ -214,6 +214,64 @@ func TestSetHTMLTemplate(t *testing.T) {
 	assert.NotNil(t, engine())
 }
 
+func TestLoadHTMLGlob(t *testing.T) {
+	LoadHTMLGlob("../testdata/tmpl/*")
+
+	GET("/html-glob", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "hello.tmpl", "World")
+	})
+
+	req := httptest.NewRequest(http.MethodGet, "/html-glob", nil)
+	w := httptest.NewRecorder()
+	engine().ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Contains(t, w.Body.String(), "Hello World")
+}
+
+func TestLoadHTMLGlob_Invalid(t *testing.T) {
+	assert.Panics(t, func() {
+		LoadHTMLGlob("invalid/path/*")
+	})
+}
+
+func TestLoadHTMLFiles(t *testing.T) {
+	LoadHTMLFiles("../testdata/tmpl/hello.tmpl")
+
+	GET("/html-files", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "hello.tmpl", "Files")
+	})
+
+	req := httptest.NewRequest(http.MethodGet, "/html-files", nil)
+	w := httptest.NewRecorder()
+	engine().ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Contains(t, w.Body.String(), "Hello Files")
+}
+
+func TestLoadHTMLFiles_Invalid(t *testing.T) {
+	assert.Panics(t, func() {
+		LoadHTMLFiles("notfound.tmpl")
+	})
+}
+
+func TestLoadHTMLFS(t *testing.T) {
+	fs := http.Dir("../testdata/tmpl")
+	LoadHTMLFS(fs, "*.tmpl")
+
+	GET("/html-fs", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "hello.tmpl", "FS")
+	})
+
+	req := httptest.NewRequest(http.MethodGet, "/html-fs", nil)
+	w := httptest.NewRecorder()
+	engine().ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Contains(t, w.Body.String(), "Hello FS")
+}
+
 func TestStaticFile(t *testing.T) {
 	StaticFile("/static-file", "../testdata/test_file.txt")
 
