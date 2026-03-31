@@ -402,8 +402,8 @@ func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
 // Routes returns a slice of registered routes, including some useful information, such as:
 // the http method, path, and the handler name.
 func (engine *Engine) Routes() (routes RoutesInfo) {
-	for _, tree := range engine.trees {
-		routes = iterate("", tree.method, routes, tree.root)
+	for method, root := range engine.methodIndex {
+		routes = iterate("", method, routes, root)
 	}
 	return routes
 }
@@ -527,8 +527,8 @@ func updateRouteTree(n *node) {
 
 // updateRouteTrees do update to the route trees
 func (engine *Engine) updateRouteTrees() {
-	for _, tree := range engine.trees {
-		updateRouteTree(tree.root)
+	for _, root := range engine.methodIndex {
+		updateRouteTree(root)
 	}
 }
 
@@ -750,12 +750,12 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 		// According to RFC 7231 section 6.5.5, MUST generate an Allow header field in response
 		// containing a list of the target resource's currently supported methods.
 		allowed := make([]string, 0, len(t)-1)
-		for _, tree := range engine.trees {
-			if tree.method == httpMethod {
+		for method, treeRoot := range engine.methodIndex {
+			if method == httpMethod {
 				continue
 			}
-			if value := tree.root.getValue(rPath, nil, c.skippedNodes, unescape); value.handlers != nil {
-				allowed = append(allowed, tree.method)
+			if value := treeRoot.getValue(rPath, nil, c.skippedNodes, unescape); value.handlers != nil {
+				allowed = append(allowed, method)
 			}
 		}
 		if len(allowed) > 0 {
