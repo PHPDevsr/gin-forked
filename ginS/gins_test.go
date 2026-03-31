@@ -13,6 +13,7 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -65,13 +66,21 @@ func TestRunTLS_Real(t *testing.T) {
 		c.String(200, "secure")
 	})
 
+	certFile := filepath.Join("testdata", "certificate", "cert.pem")
+	keyFile := filepath.Join("testdata", "certificate", "key.pem")
+
+	errCh := make(chan error, 1)
+
 	go func() {
-		_ = RunTLS(":8443", "cert.pem", "key.pem")
+		errCh <- RunTLS(":8443", certFile, keyFile)
 	}()
 
-	// wait TCP ready (not HTTP)
-	if err := waitTCP("localhost:8443"); err != nil {
-		t.Fatalf("server not ready: %v", err)
+	select {
+	case err := <-errCh:
+		if err != nil {
+			t.Fatalf("RunTLS failed: %v", err)
+		}
+	case <-time.After(1 * time.Second):
 	}
 
 	client := &http.Client{
@@ -82,17 +91,22 @@ func TestRunTLS_Real(t *testing.T) {
 		},
 	}
 
-	resp, err := client.Get("https://localhost:8443/secure")
-	if err != nil {
-		t.Fatalf("TLS request failed: %v", err)
-	}
-	defer resp.Body.Close()
+	for i := 0; i < 20; i++ {
+		resp, err := client.Get("https://localhost:8443/secure")
+		if err == nil {
+			defer resp.Body.Close()
 
-	body, _ := io.ReadAll(resp.Body)
+			body, _ := io.ReadAll(resp.Body)
 
-	if string(body) != "secure" {
-		t.Fatalf("unexpected response: %s", string(body))
+			if string(body) != "secure" {
+				t.Fatalf("unexpected response: %s", string(body))
+			}
+			return
+		}
+		time.Sleep(200 * time.Millisecond)
 	}
+
+	t.Fatal("TLS server not ready after retries")
 }
 
 func TestRunUnix_Real(t *testing.T) {
