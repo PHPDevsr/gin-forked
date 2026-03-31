@@ -7,7 +7,6 @@ package ginS
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
 	"html/template"
 	"io"
 	"net"
@@ -23,18 +22,6 @@ import (
 
 func init() {
 	gin.SetMode(gin.TestMode)
-}
-
-func waitTCP(addr string) error {
-	for range 20 {
-		conn, err := net.Dial("tcp", "localhost:8443")
-		if err == nil {
-			conn.Close()
-			return nil
-		}
-		time.Sleep(200 * time.Millisecond)
-	}
-	return fmt.Errorf("tcp not ready: %s", addr)
 }
 
 func TestRun_Real(t *testing.T) {
@@ -91,7 +78,7 @@ func TestRunTLS_Real(t *testing.T) {
 		},
 	}
 
-	for i := 0; i < 20; i++ {
+	for range 20 {
 		resp, err := client.Get("https://localhost:8443/secure")
 		if err == nil {
 			defer resp.Body.Close()
