@@ -21,9 +21,9 @@ test:
 	echo "mode: count" > coverage.out
 	for d in $(TESTFOLDER); do \
 		if [ -n "$(TESTTAGS)" ]; then \
-			$(GO) test $(TESTTAGS) -v -covermode=count -coverprofile=profile.out $$d > tmp.out; \
+			$(GO) test $(TESTTAGS) -v -covermode=$(COVERMODE) -coverprofile=profile.out $$d > tmp.out; \
 		else \
-			$(GO) test -v -covermode=count -coverprofile=profile.out $$d > tmp.out; \
+			$(GO) test -v -covermode=$(COVERMODE) -coverprofile=profile.out $$d > tmp.out; \
 		fi; \
 		cat tmp.out; \
 		if grep -q "^--- FAIL" tmp.out; then \
