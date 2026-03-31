@@ -84,4 +84,5 @@ jobs:
         uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ matrix.os }},go-${{ matrix.go }},${{ matrix.test-tags }}
+          flags: ${{ matrix.os }}
+          name: ${{ matrix.os }}-go${{ matrix.go }}-${{ matrix.test-tags }}
