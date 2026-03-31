@@ -186,6 +186,7 @@ type Engine struct {
 	noMethod         HandlersChain
 	pool             sync.Pool
 	trees            methodTrees
+	methodIndex      map[string]*node
 	maxParams        uint16
 	maxSections      uint16
 	trustedProxies   []string
@@ -226,6 +227,7 @@ func New(opts ...OptionFunc) *Engine {
 		UnescapePathValues:         true,
 		MaxMultipartMemory:         defaultMultipartMemory,
 		trees:                      make(methodTrees, 0, 9),
+		methodIndex:                make(map[string]*node, 9),
 		delims:                     render.Delims{Left: "{{", Right: "}}"},
 		secureJSONPrefix:           "while(1);",
 		trustedProxies:             []string{"0.0.0.0/0", "::/0"},
@@ -374,11 +376,17 @@ func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
 
 	debugPrintRoute(method, path, handlers)
 
-	root := engine.trees.get(method)
+	root := engine.methodIndex[method]
 	if root == nil {
 		root = new(node)
 		root.fullPath = "/"
-		engine.trees = append(engine.trees, methodTree{method: method, root: root})
+
+		engine.trees = append(engine.trees, methodTree{
+			method: method,
+			root:   root,
+		})
+
+		engine.methodIndex[method] = root
 	}
 	root.addRoute(path, handlers)
 
@@ -696,16 +704,14 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 
 	// Find root of the tree for the given HTTP method
 	t := engine.trees
-	for i, tl := 0, len(t); i < tl; i++ {
-		if t[i].method != httpMethod {
-			continue
-		}
-		root := t[i].root
-		// Find route in tree
+	root := engine.methodIndex[httpMethod]
+	if root != nil {
 		value := root.getValue(rPath, c.params, c.skippedNodes, unescape)
+
 		if value.params != nil {
 			c.Params = *value.params
 		}
+
 		if value.handlers != nil {
 			c.handlers = value.handlers
 			c.fullPath = value.fullPath
@@ -713,6 +719,7 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 			c.writermem.WriteHeaderNow()
 			return
 		}
+
 		if httpMethod != http.MethodConnect && rPath != "/" {
 			// TrailingSlashInsensitivity has precedence over RedirectTrailingSlash.
 			if engine.TrailingSlashInsensitivity && value.tsr {
@@ -737,7 +744,6 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 				return
 			}
 		}
-		break
 	}
 
 	if engine.HandleMethodNotAllowed && len(t) > 0 {
