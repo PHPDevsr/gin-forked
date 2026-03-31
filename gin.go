@@ -703,7 +703,6 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 	}
 
 	// Find root of the tree for the given HTTP method
-	t := engine.trees
 	root := engine.methodIndex[httpMethod]
 	if root != nil {
 		value := root.getValue(rPath, c.params, c.skippedNodes, unescape)
@@ -746,10 +745,10 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 		}
 	}
 
-	if engine.HandleMethodNotAllowed && len(t) > 0 {
+	if engine.HandleMethodNotAllowed && len(engine.trees) > 0 {
 		// According to RFC 7231 section 6.5.5, MUST generate an Allow header field in response
 		// containing a list of the target resource's currently supported methods.
-		allowed := make([]string, 0, len(t)-1)
+		allowed := make([]string, 0, len(engine.trees)-1)
 		for method, treeRoot := range engine.methodIndex {
 			if method == httpMethod {
 				continue
