@@ -715,7 +715,7 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 		}
 		if httpMethod != http.MethodConnect && rPath != "/" {
 			// TrailingSlashInsensitivity has precedence over RedirectTrailingSlash.
-			if value.tsr && engine.TrailingSlashInsensitivity {
+			if engine.TrailingSlashInsensitivity && value.tsr {
 				// Retry with the path with or without the trailing slash.
 				// It should succeed because tsr is true.
 				*c.params = (*c.params)[:0] // reset params to avoid overflowing params
@@ -729,7 +729,7 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 				}
 			}
 
-			if value.tsr && engine.RedirectTrailingSlash {
+			if engine.RedirectTrailingSlash && value.tsr {
 				redirectTrailingSlash(c)
 				return
 			}
