@@ -5,10 +5,13 @@
 package ginS
 
 import (
+	"crypto/tls"
 	"html/template"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/PHPDevsr/gin-forked"
 	"github.com/stretchr/testify/assert"
@@ -16,6 +19,62 @@ import (
 
 func init() {
 	gin.SetMode(gin.TestMode)
+}
+
+func TestRun_Real(t *testing.T) {
+	// setup route
+	GET("/ping", func(c *gin.Context) {
+		c.String(http.StatusOK, "pong")
+	})
+
+	go func() {
+		_ = Run(":8085")
+	}()
+
+	// wait server ready
+	time.Sleep(300 * time.Millisecond)
+
+	resp, err := http.Get("http://localhost:8085/ping")
+	if err != nil {
+		t.Fatalf("request failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected 200, got %d", resp.StatusCode)
+	}
+}
+
+func TestRunTLS_Real(t *testing.T) {
+	GET("/secure", func(c *gin.Context) {
+		c.String(200, "secure")
+	})
+
+	go func() {
+		_ = RunTLS(":8443", "cert.pem", "key.pem")
+	}()
+
+	time.Sleep(500 * time.Millisecond)
+
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+
+	resp, err := client.Get("https://localhost:8443/secure")
+	if err != nil {
+		t.Fatalf("TLS request failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	if string(body) != "secure" {
+		t.Fatalf("unexpected response: %s", string(body))
+	}
 }
 
 func TestGET(t *testing.T) {
