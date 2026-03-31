@@ -18,7 +18,7 @@ endif
 .PHONY: test
 # Run tests to verify code functionality.
 test:
-	echo "mode: count" > coverage.out
+	echo "mode: $(COVERMODE)" > coverage.out
 	for d in $(TESTFOLDER); do \
 		if [ -n "$(TESTTAGS)" ]; then \
 			$(GO) test $(TESTTAGS) -v -covermode=$(COVERMODE) -coverprofile=profile.out $$d > tmp.out; \
