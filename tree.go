@@ -42,22 +42,6 @@ func (ps Params) ByName(name string) (va string) {
 	return va
 }
 
-type methodTree struct {
-	method string
-	root   *node
-}
-
-type methodTrees []methodTree
-
-func (trees methodTrees) get(method string) *node {
-	for _, tree := range trees {
-		if tree.method == method {
-			return tree.root
-		}
-	}
-	return nil
-}
-
 func longestCommonPrefix(a, b string) int {
 	i := 0
 	max_ := min(len(a), len(b))
