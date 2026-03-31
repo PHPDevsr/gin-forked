@@ -5,9 +5,11 @@
 package ginS
 
 import (
+	"context"
 	"crypto/tls"
 	"html/template"
 	"io"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -73,6 +75,41 @@ func TestRunTLS_Real(t *testing.T) {
 	body, _ := io.ReadAll(resp.Body)
 
 	if string(body) != "secure" {
+		t.Fatalf("unexpected response: %s", string(body))
+	}
+}
+
+func TestRunUnix_Real(t *testing.T) {
+	socket := "/tmp/gin_test.sock"
+
+	GET("/unix", func(c *gin.Context) {
+		c.String(200, "unix-ok")
+	})
+
+	go func() {
+		_ = RunUnix(socket)
+	}()
+
+	time.Sleep(300 * time.Millisecond)
+
+	client := &http.Client{
+		Transport: &http.Transport{
+			DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+				d := net.Dialer{}
+				return d.DialContext(ctx, "unix", socket)
+			},
+		},
+	}
+
+	resp, err := client.Get("http://unix/unix")
+	if err != nil {
+		t.Fatalf("unix request failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	if string(body) != "unix-ok" {
 		t.Fatalf("unexpected response: %s", string(body))
 	}
 }
