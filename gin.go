@@ -745,10 +745,11 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 		}
 	}
 
-	if engine.HandleMethodNotAllowed && len(engine.trees) > 0 {
+	lenTrees := len(engine.trees)
+	if engine.HandleMethodNotAllowed && lenTrees > 0 {
 		// According to RFC 7231 section 6.5.5, MUST generate an Allow header field in response
 		// containing a list of the target resource's currently supported methods.
-		allowed := make([]string, 0, len(engine.trees)-1)
+		allowed := make([]string, 0, lenTrees-1)
 		for method, treeRoot := range engine.methodIndex {
 			if method == httpMethod {
 				continue
