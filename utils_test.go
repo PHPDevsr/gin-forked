@@ -29,7 +29,7 @@ func BenchmarkParseAccept(b *testing.B) {
 }
 
 func BenchmarkTrimString(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		_ = trimString(ipAddr)
 	}
 }

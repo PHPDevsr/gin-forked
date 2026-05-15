@@ -1111,3 +1111,9 @@ func TestTreeFindCaseInsensitivePathWildcardParamAndStaticChild(t *testing.T) {
 		t.Errorf("Wrong result for '/prefix/something': %s", string(out))
 	}
 }
+
+func BenchmarkCountParams(b *testing.B) {
+	for b.Loop() {
+		countParams("/path/:param1/static/*catch-all")
+	}
+}
