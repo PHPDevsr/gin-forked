@@ -3,7 +3,7 @@ module github.com/PHPDevsr/gin-forked
 go 1.25.0
 
 require (
-	github.com/bytedance/sonic v1.15.1
+	github.com/bytedance/sonic v1.15.2
 	github.com/gin-contrib/sse v1.1.1
 	github.com/go-playground/validator/v10 v10.30.3
 	github.com/goccy/go-json v0.10.6
