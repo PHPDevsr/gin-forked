@@ -17,7 +17,7 @@ require (
 	github.com/ugorji/go/codec v1.3.2
 	go.mongodb.org/mongo-driver/v2 v2.8.0
 	golang.org/x/net v0.58.0
-	google.golang.org/protobuf v1.36.11
+	google.golang.org/protobuf v1.36.12
 )
 
 require gopkg.in/yaml.v3 v3.0.1 // indirect
