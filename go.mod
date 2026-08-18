@@ -16,7 +16,7 @@ require (
 	github.com/stretchr/testify v1.12.1
 	github.com/ugorji/go/codec v1.3.2
 	go.mongodb.org/mongo-driver/v2 v2.8.0
-	golang.org/x/net v0.57.0
+	golang.org/x/net v0.58.0
 	google.golang.org/protobuf v1.36.11
 )
 
